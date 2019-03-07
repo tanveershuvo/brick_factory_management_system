@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 AdminBSB - Material Design
 =======================
 [![npm version](https://img.shields.io/npm/v/adminbsb-materialdesign.svg)](https://www.npmjs.com/package/adminbsb-materialdesign)
@@ -73,3 +74,6 @@ Donations
 Donations are **greatly appreciated!**
 
 **[BUY ME A COFFEE](http://bit.ly/2yEjtx5)**
+=======
+# brick_factory_management_system
+>>>>>>> 9d2675ff2c54e2c8830608e6b167820a31645b85
