@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Form Wizard | Bootstrap Based Admin Template - Material Design</title>
+    <!-- Favicon-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    
+
+    <!-- Custom Css -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+	<!-- Multi Select Css -->
+    <link href="plugins/multi-select/css/multi-select.css" rel="stylesheet">
+
+    <!-- Bootstrap Spinner Css -->
+    <link href="plugins/jquery-spinner/css/bootstrap-spinner.css" rel="stylesheet">
+
+    <!-- Bootstrap Tagsinput Css -->
+    <link href="plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+
+    <!-- Bootstrap Select Css -->
+    <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+	<script>
+
+			
+			function dataRetrieval(){
+		   	  var tbody = document.getElementById("ajaxtable");
+			  var tableRow="";
+			  
+			  $.ajax({
+				type:'POST',
+				url:"ajax_retrieve.php",
+				data:{"total":1},
+				dataType:"json",
+				success : function(response){
+				     /*loop start*/
+					 
+					 for(var i=0;i<response.length ;i++){
+						 var a = "";
+						if((response[i].total_price - response[i].paid)==0){
+							a +="<b> Due Cleared";
+						} else {
+								a += "<a onclick='due("+response[i].order_id+","+response[i].cus_id+","+response[i].paid+","+response[i].total_price+")' class='btn btn-primary a-btn-slide-text'>"+
+					 "<span class='glyphicon glyphicon-plus'></span><span><strong>Payment</strong></span></a>";
+						}
+						var b ="";
+						
+						if ((response[i].total_price - response[i].paid)==0){
+							
+						}
+						else
+						{
+							b += (response[i].total_price - response[i].paid)+" TK";
+						}
+					 tableRow += "<tr><td>"+response[i].order_id+"</td>"+
+					 "<td>"+response[i].order_date+"</td>"+
+					 "<td>"+response[i].pro_name+"</td>"+
+					 "<td>"+response[i].quantity+"</td>"+
+					 "<td class='text-Primary'  style='text-align:center;' > <b>"+response[i].total_price+" TK</td>"+
+					 "<td style='text-align:center;' > <b>"+response[i].paid+" TK</td> "+
+					 "<td class='text-danger'  style='text-align:center;' > <b>"+b+"</td>"+					 
+					 "<td>"+a+
+					 "</td></tr>";  
+					 /*loop end*/
+					 customerDetailsRetrieve();
+					 }
+					 tbody.innerHTML = tableRow;
+				}
+			
+			});
+			}
+			
+			
+			
+			function customerDetailsRetrieve(){
+				
+				 var div = document.getElementById("customerDetails");
+					var label = "";
+				
+				 $.ajax({
+				type:'POST',
+				url:"ajax_retrieve.php",
+				data : {"display":1},
+				dataType:"json",
+				success : function(response){
+					
+					 label = "<label><b>TOTAL DUE : <b class='text-danger'>"+response[0].Total_Due+"  TK</label>";
+					 div.innerHTML = label;
+			    	}
+					
+				});
+			
+			}
+				
+		
+		  function editAlert(){
+       			  swal({
+                          title: "Profile Edited Succesfully",
+                          type: "success",
+                          confirmButtonClass: "btn-primary",
+                          confirmButtonText: "OK",
+						  closeOnConfirm: true,
+                        }, function() {
+                            // Redirect the user
+                            window.location.href = "http://localhost/htdocs/a/tables.php";
+                          });			  
+		  }
+		  
+    function due(order_id, cus_id, paid,total_price){
+          	swal({
+            title: "Input Due Payment!",
+            text: "",
+            type: "input",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            inputPlaceholder: "Input something"
+          }, 
+		  function (inputValue) {
+            if (inputValue === false) return false;
+            if (inputValue === "") {
+              swal.showInputError("You need to input!");
+              return false
+            }
+			if (isNaN(inputValue)) {
+              swal.showInputError("Insert Numeric Value!");
+              return false
+            }
+			if (inputValue < 0) {
+              swal.showInputError("0 or minus value not accepted!");
+              return false
+            }
+			
+			var due = parseInt(inputValue);
+			var t = parseInt(total_price);
+			var p = parseInt(paid);
+			var pt = (due+paid);
+			
+			if (pt > total_price) {
+              swal.showInputError("Input amount is greater than due amount");
+              return false
+            }
+			
+			$.ajax({
+				
+				type:'POST',
+				data:{due:inputValue, oid:order_id, pid:paid},
+				url:"ajax_insertion.php",
+				success : function(){
+					
+					swal("Due Paid Successfully!", "Paid: " + due + " tk", "success");
+					dataRetrieval();
+					event.target.id == "messages_with_icon_title"; 
+					
+				}
+				
+			})
+          });
+		  }
+		 
+
+	</script>
+	
+</head>
+
+
+<?php include "template/miniheader.php" ?>
+<?php include "template/mininavbar.php" ?>
+<?php
+	include_once 'dbCon.php';
+	    $conn= connect();
+                            $id= $_GET['cID'];
+	$sql = "SELECT * , (SUM(total_price)-SUM(paid)) as 'Total_Due' 
+	        FROM order_details as o , customer_details as c 
+	        WHERE o.cus_id=c.cus_id AND o.cus_id = '$id'";
+	$results=$conn->query($sql);
+	$row = mysqli_fetch_assoc($results);
+	$_SESSION['customer_id']=$row['cus_id'];
+	$cn = $row['cus_name'];
+	$cp = $row['cus_phone'];
+	$ca = $row['cus_address'];
+	$td = $row['Total_Due'];
+
+		if (isset($_POST['add'])){
+		$cID = $_GET['cID'];
+		function generateRandomString()  {
+                                    $characters = '1234567890';
+                                    $length = 6;
+                                    $charactersLength = strlen($characters);
+                                    $randomString = '';
+                                    for ($i = 0; $i < $length; $i++) {
+                                        $randomString .= $characters[rand(0, $charactersLength - 1)];
+                                    }
+                                    return $randomString;
+                                }
+		
+                             $order = generateRandomString();
+                         	$pName = $_POST['product'];
+                         	$uPrice = $_POST['u_price'];
+                         	$qnt = $_POST['qnt'];
+                         	$tPrice = $_POST['tPrice'];
+                         	$pay = $_POST['pay'];
+                         	$date = date('d/m/Y');
+
+                            	 $sql = "INSERT INTO `order_details`(`order_id`,`cus_id`, `pro_name`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`) 
+		 VALUES ('$order','$cID','$pName','$uPrice','$qnt','$tPrice','$pay','$date')";
+
+		 if($conn->query($sql)){
+			 echo "<script>window.open ('http://localhost/htdocs/a/customer_reciept.php?oID=".$order."','MyWindow',width='600',height='600');</script>";
+		 } 
+		else
+			{
+			 echo "<script>window.location.href = 'http://localhost/htdocs/a/500.php';</script>";
+		 }
+		
+		}
+?>							   
+	<section class="content">
+        <div class="container-fluid">
+            <div  class="header">
+			  
+				<h4 align="left" >
+                   Customer Name : <b class="text-primary" ><?php echo $cn;?></b>
+                </h4>
+            </div>
+
+			<div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="body">
+						    
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active">
+                                    <a href="#home_with_icon_title" data-toggle="tab">
+                                        <i class="material-icons">plus_one</i> NEW ORDER
+                                    </a>
+                                </li>
+                                
+                                <li role="presentation">
+                                    <a onclick ="(dataRetrieval()& customerDetailsRetrieve())" href="#messages_with_icon_title" data-toggle="tab">
+                                        <i class="material-icons">history</i> History
+                                    </a>
+                                </li>
+								
+								<li role="presentation">
+                                    <a href="#profile_with_icon_title" data-toggle="tab">
+                                        <i class="material-icons">face</i> EDIT PROFILE
+                                    </a>
+                                </li>
+                                
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="home_with_icon_title">
+                               <!--PHP chilo-->
+			   
+							  <form class="form-horizontal"  method ="POST" >
+								<div class="row clearfix js-sweetalert">
+									<div class="col-lg-8 col-md-12 col-sm-10 col-xs-8" id="display-success" >
+										<label class="text-danger" ><b></b></label>
+									</div>
+								</div>
+
+                              <div class="row clearfix">
+                               <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                        <label for="password_2">Product Name :</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                  
+                                    <select name="product" class=" show-tick" id="mySelect" onchange="changeBasePrice()">
+									<option>SELECT FROM HERE</option>
+										
+									<?php 
+												include_once 'dbCon.php';
+												$conn= connect();
+												
+												$sql= "SELECT * FROM product_details";
+												$resultData=$conn->query($sql);
+												$unitPriceArr = [];
+												$productNameArr = [];
+												$counter = 0;
+											    foreach ($resultData as $row){
+													$productNameArr[$counter]=$row['pro_name'];
+													$unitPriceArr[$counter++]=$row['unit_price'];
+									
+									?>
+                                        <option  ><?=$row['pro_name']?></option>
+										
+									<?php } ?>
+                                    </select>
+								<script>
+									var unitPriceArr = [<?php echo '"'.implode('","', $unitPriceArr).'"' ?>];
+									var productNameArr = [<?php echo '"'.implode('","', $productNameArr).'"' ?>];
+									
+									function changeBasePrice() {
+										var x = document.getElementById("mySelect").value;
+										for(var i = 0; i <productNameArr.length; i++){
+											
+											if(x===productNameArr[i])
+											document.getElementById("unip").value = unitPriceArr[i];
+											
+										}
+									}
+								</script>
+                                </div> 
+								</div>
+                                <div class="row clearfix">
+                                    <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                        <label for="password_2">Unit Price :</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" name="u_price" id="unip" oninput="findTotal()" class="form-control"  placeholder="Enter unit price"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+								
+								<div class="row clearfix">
+                                    <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                        <label for="password_2">Quantity :</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" name="qnt" id="qnty" oninput="findTotal()" class="form-control"  placeholder="Enter Quantity">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+								
+								
+								<div class="row clearfix">
+                                    <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                        <label for="password_2">Total Price:</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" name="tPrice"  id="tprc" class="form-control"  >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+								
+                                <div class="row clearfix">
+                                    <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                        <label for="password_2">Paid:</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" name="pay" id="pay" oninput="findTotal()"  class="form-control"  placeholder="Enter payment">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+								
+                                <div class="row clearfix">
+                                    <div class="col-lg-offset-4 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+									
+                                        <button type="submit" onclick = "return check_info();" name="add" class="col-lg-4 btn btn-primary waves-effect">  DONE  </button>
+                                   
+									</div>
+                                </div>
+                            </form>
+<script>						
+	   function findTotal(){
+		     var w = document.getElementById('unip').value;
+		     var h = document.getElementById('qnty').value;
+		     var g = document.getElementById('pay').value;
+		     var s = document.getElementById('mySelect').value;
+	         	total = w * h ;
+		     	document.getElementById('tprc').value = total;
+		     	
+	         	if(isNaN(total)){
+	         		swal('Please enter only numbers', '', 'warning')
+	         	}
+		     	if(isNaN(w)){
+	         		swal('Please enter only numbers', '', 'warning')
+		     		document.getElementById('unp').value='';
+	         	}
+		     	if(isNaN(h)){
+	         		swal('Please enter only numbers', '', 'warning')
+		     		document.getElementById('qnt').value='';
+	         	}
+		     	if(isNaN(g)){
+	         		swal('Please enter only numbers', '', 'warning')
+		     		document.getElementById('pay').value='';		
+	         	}
+		     }     
+		 
+        function check_info(){
+		   var un = parseFloat(document.getElementById('unip').value);
+		   var qn = parseFloat(document.getElementById('qnty').value);
+		   var sl = document.getElementById('mySelect').value;
+		   var pd = 0;
+			
+			if(sl=="SELECT FROM HERE"){
+				swal('Please select product name', '', 'warning')
+				return false;
+			}
+			else if(document.getElementById('unip').value==""){
+				swal('Please input in all text fields', '', 'warning')
+				return false;
+			}
+			else if(document.getElementById('qnty').value==""){
+				swal('Please input in all text fields', '', 'warning')
+				return false;
+			}
+			else if(document.getElementById('pay').value==""){
+				swal('Please input in all text fields', '', 'warning')
+				return false;
+			}
+			else{
+				pd = parseFloat(document.getElementById('pay').value);
+				tp = parseFloat(document.getElementById('tprc').value);
+				if (pd > tp){
+					swal('Incorrect Payment insertion!', 'Payment is more than total price!!',  'warning')
+					return false;
+				}
+				else{
+					return true;
+				}
+			}
+	   }	  
+		
+</script>
+									
+									
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="profile_with_icon_title">
+                                    <?php 
+									include_once 'dbCon.php';
+									$conn= connect();
+									if (isset($_POST['edit'])){
+										$id= $_GET['cID'];
+										$ecn = $_POST['cus_name'];
+										$ecm = $_POST['mob'];
+										$eca = $_POST['addrs'];
+										
+									$sql = "UPDATE customer_details SET `cus_name` = '$ecn' , `cus_phone` = '$ecm',`cus_address`='$eca' WHERE cus_id = '$id'";
+									if ($conn->query($sql)){
+                                                     	echo '<script type="text/javascript"> editAlert(); </script>';
+                                		         }
+                                				 else
+                                				 {
+                                					 echo '<script type="text/javascript"> window.location.href = "http://localhost/htdocs/a/index.php";</script>';
+                                				 }
+										
+									}
+									
+									?>
+									<form class="form-horizontal" method ="POST" >
+                                            <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                                    <label >Customer Name :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="cus_name"  id="cName" class="form-control" value = "<?php if (isset($cn)) { echo $cn ;};?>" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div></br>
+											
+                                            <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                                    <label for="password_2">Mobile Number :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="mob" id="mobile" class="form-control" value = "<?php if (isset($cn)) { echo $cp ;};?>" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <br>
+								            
+								            <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
+                                                    <label for="password_2">Address :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="addrs" id="address"  class="form-control" value = "<?php if (isset($cn)) { echo $ca ;};?>" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> 
+
+
+											<div class="row clearfix">
+												<div class="col-lg-offset-4 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
+									
+												<button type="submit" onclick=" return MyFn2()" name="edit" class="btn btn-primary m-t-30 waves-effect">EDIT DONE</button>
+                                   
+												</div>
+											</div>
+										 </form>
+                                       </div>
+							<script>
+
+function MyFn2(){
+			var name= document.getElementById('cName').value;
+			var mobile= document.getElementById('mobile').value;
+			var address= document.getElementById('address').value;
+			if (name==""){
+				swal('Please input customer name', '', 'warning')
+				return false;					
+			}
+			if (mobile==""){
+				swal('Please input mobile number', '', 'warning')
+				return false;
+			}
+			if (address==""){
+				swal('Please input address', '', 'warning')
+				return false;
+			}
+			if(isNaN(mobile)){
+				swal('Mobile Number conatins only numbers!!', '', 'warning');
+				document.getElementById('mobile').value = '';
+				return false;					
+			}
+			if(mobile.length != 11){
+				swal('Mobile Number Must be 11 digit!!', '', 'warning');
+				return false;					
+			}
+}
+</script>							
+                                <div role="tabpanel" class="tab-pane fade" id="messages_with_icon_title">
+                                    <div class="body">		
+                                      <div class="table-responsive">
+                                        <table id = "table" class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>RECEIPT NO.</th>
+                                                    <th>ORDER DATE</th>
+                                                    <th>PRODUCT NAME</th>
+                                                    <th>QUANTITY</th>
+													<th>TOTAL PRICE</th>
+													<th>AMOUNT PAID</th>
+                                                    <th>DUE</th>
+                                                    <th>DUE PAYMENT</th>
+                                                    
+                                                </tr>
+                                            </thead>
+											<h4 align="right"  id = "customerDetails">
+					
+					                        </h4>
+											<tbody id="ajaxtable">
+                                        
+										     </tbody>
+											</table>
+							        </div>
+								</div>
+                               </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #END# Tabs With Icon Title -->
+		</div>
+	</section>
+
+<style>
+a.btn:hover {
+     -webkit-transform: scale(1.1);
+     -moz-transform: scale(1.1);
+     -o-transform: scale(1.1);
+ }
+ a.btn {
+     -webkit-transform: scale(0.8);
+     -moz-transform: scale(0.8);
+     -o-transform: scale(0.8);
+     -webkit-transition-duration: 0.5s;
+     -moz-transition-duration: 0.5s;
+     -o-transition-duration: 0.5s;
+ }
+ </style>
+
+   <script src="plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Jquery Validation Plugin Css -->
+    <script src="plugins/jquery-validation/jquery.validate.js"></script>
+
+    <!-- JQuery Steps Plugin Js -->
+    <script src="plugins/jquery-steps/jquery.steps.js"></script>
+
+    <!-- Sweet Alert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert.min.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <!-- Custom Js -->
+    <script src="js/admin.js"></script>
+    <script src="js/pages/forms/form-wizard.js"></script>
+	<script src="js/pages/forms/advanced-form-elements.js"></script>
+    <!-- Demo Js -->
+    <script src="js/demo.js"></script>
+	 <!-- Multi Select Plugin Js -->
+    <script src="plugins/multi-select/js/jquery.multi-select.js"></script>
+	 <!-- Select Plugin Js -->
+    <script src="plugins/bootstrap-select/js/bootstrap-select.js"></script>
+	
+	<script>
+	    
+	
+	</script>
+</body>
+</html>
