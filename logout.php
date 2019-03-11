@@ -1,5 +1,5 @@
-<?php 
+<?php
 session_start();
 session_destroy();
-header('location:signin.php');	
+	echo '<script>window.location.href = "index"</script>';
 ?>

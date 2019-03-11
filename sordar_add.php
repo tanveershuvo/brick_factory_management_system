@@ -1,9 +1,9 @@
-<?php include "template/miniheader.php";
-unset ($_SESSION['nav']);
-$_SESSION['nav'] = 8 ; 
- ?>
-    <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<?php
+  include "template/miniheader.php";
+  unset ($_SESSION['nav']);
+  $_SESSION['nav'] = 8 ;
+  include "signin_checker.php";
+?>
     <title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | All Sordars </title>
     <!-- Favicon-->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -40,19 +40,19 @@ $_SESSION['nav'] = 8 ;
     <!-- Bootstrap Select Css -->
     <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  
+
     <!-- Bootstrap Select Css -->
     <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
 	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
-	
+
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 	<script>
-	    
+
 		function addalert(){
 			swal({
            title: "ADD Successfully!!",
@@ -62,10 +62,10 @@ $_SESSION['nav'] = 8 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/sordar_add";
+           window.location.href= "sordar_add";
          });
 		}
-		
+
 		function myFN(id){
 		swal({
            title: "Duplicate Entry!!",
@@ -75,17 +75,17 @@ $_SESSION['nav'] = 8 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/sordar_details";
+           window.location.href= "sordar_details";
          });
 		}
-		
+
 	</script>
 </head>
 
-<?php include "template/mininavbar.php" ?> 
-		
+<?php include "template/mininavbar.php" ?>
+
 		<script>
-		
+
 		function datasession(sor){
 			$.ajax({
 				type:'POST',
@@ -93,24 +93,24 @@ $_SESSION['nav'] = 8 ;
 				data:{sorID:sor},
 				dataType:"json",
 				success : function(response){
-				
+
 					 }
 			});
-			
-				window.location.href="http://localhost/bfms/sordar_details.php";
+
+				window.location.href="sordar_details";
 		}
-		
+
 		function check_info(){
 			var name= document.getElementById('sName').value;
 			var mobile= document.getElementById('mobile').value;
 			var address= document.getElementById('address').value;
 			var sl = document.getElementById('mySelect').value;
-			
+
 			if (name==""){
 				swal('Please input customer name', '', 'warning')
 				return false;
 			}
-			
+
 			if (mobile==""){
 				swal('Please input mobile number', '', 'warning')
 				return false;
@@ -125,30 +125,30 @@ $_SESSION['nav'] = 8 ;
 			}
 			if(mobile.length != 11){
 				swal('Mobile Number Must be 11 digit!!', '', 'warning');
-				return false;					
+				return false;
 			}
-			
-			
-			
+
+
+
 		}
 		function validation(){
-			
+
 			var name= document.getElementById('sName').value;
 			var mobile= document.getElementById('mobile').value;
 			var address= document.getElementById('address').value;
 			if(isNaN(mobile)){
 				swal('Mobile Number conatins only numbers!!', '', 'warning')
 				document.getElementById('mobile').value='';
-				return false;					
+				return false;
 			}
 			if(!isNaN(name)){
 				swal('Name conatins only letter!!', '', 'warning')
 				document.getElementById('cName').value='';
-				return false;					
+				return false;
 			}
-			
+
 		}
-		
+
 		 $(document).ready(function(){
           $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -157,7 +157,7 @@ $_SESSION['nav'] = 8 ;
             });
           });
         });
-		
+
 	jQuery(function ($) {
         $("#excel").click(function () {
 		d = Date.now();
@@ -173,7 +173,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                         Sordar_Mobile: { type: String },
                         Sordar_Address: { type: String },
                         Sordar_Type: { type: String }
-                       
+
                     }
                 }
             });
@@ -215,7 +215,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             type: String,
                                             value: "Sordar_Type"
                                         }
-                                     
+
                                     ]
                                 }
                             ].concat($.map(data, function(item) {
@@ -236,17 +236,17 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-	
+
 	jQuery(function ($) {
         $("#pdf").click(function () {
-			
+
 		d = Date.now();
 		d = new Date(d);
 		d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
 
-			
-			
+
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -269,18 +269,18 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                 });
 
                 pdf.addPage("a4", "portrait");
-				
+
                 pdf.table(
                     50,
                     50,
                     data,
-                    [	
-					
+                    [
+
                         { field: "Sordar_Name", title: "Sordar_Name", width: 100 },
                         { field: "Sordar_Mobile", title: "Sordar_Mobile", width: 100 },
                         { field: "Sordar_Address", title: "Sordar_Address", width: 150 },
                         { field: "Sordar_Type", title: "Sordar_Type", width: 100 }
-						
+
                     ],
                     {
                         margins: {
@@ -295,43 +295,43 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-		
-		
+
+
 		</script>
-						
+
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
 			<button type="button" class="col-lg-offset-10 col-md-offset-4 col-sm-offset-4 col-xs-offset-5 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW SORDAR </button>
-                      
+
                  <h2>
                     <b>SORDAR DETAILS AND INVOICE GENERATOR</b>
                  </h2>
             </div>
-			
+
 			<!-- Exportable Table -->
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
 					   <div class="header">
-						  <div class="row clearfix">                 
+						  <div class="row clearfix">
                             <div class="col-lg-4 ">
                                <div class="form-line">
 									<input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
                                </div>
-                            </div>	
+                            </div>
 							<div class="col-lg-4 ">
-							
+
 							</div>
 							<div class="col-lg-2 ">
 							<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-										
-							</div>	
+
+							</div>
 							<div class="col-lg-2 ">
 							<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-										
-							</div>								
-                         </div> 
+
+							</div>
+                         </div>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -342,22 +342,22 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <th  style='text-align:center;'>Sordar_Mobile</th>
                                             <th  style='text-align:center;'>Sordar_Address</th>
                                             <th  style='text-align:center;'>Sordar_Type</th>
-											
+
                                             <th  style='text-align:center;'>Action</th>
 						</tr>
                                     </thead>
-                                  
-                                    <tbody id = "ajaxtable"> 
-									<?php 
+
+                                    <tbody id = "ajaxtable">
+									<?php
 												include_once 'dbCon.php';
 												$conn= connect();
 												$comID = $_SESSION['com_id'];
-												
+
 												$sql= "SELECT * from sordar_details where com_id='$comID'";
-												
+
 												$resultData=$conn->query($sql);
 											    foreach ($resultData as $row){
-												
+
 										?>
                                         <tr>
                                             <td><b><?=$row['sor_name']?></b></td>
@@ -365,13 +365,13 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <td><?=$row['sor_address']?></td>
                                             <td><?=$row['sor_type']?></td>
 											<td><a onclick="datasession(<?=$row['sor_id']?>)" class="hide-from-printer btn btn-primary btn-circle waves-effect waves-circle waves-float"><i class="material-icons">input</i></a></td>
-                                           
+
                                         </tr>
 												<?php }  ?>
                                     </tbody>
                                 </table>
                             </div>
-							
+
                         </div>
                     </div>
                 </div>
@@ -393,7 +393,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
     <script src="js/admin.js"></script>
     <script src="js/pages/forms/basic-form-elements.js"></script>
 
-    
+
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
 
@@ -408,11 +408,11 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-	
+
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-	
-  
+
+
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>
@@ -424,9 +424,6 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 <?php
 	include_once 'dbCon.php';
 	$conn= connect();
-	
-	
-	
    if (isset($_POST['submit'])){
 	   function generateRandomString()  {
         $characters = '0123456789';
@@ -450,15 +447,15 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 	   $sql = "INSERT INTO sordar_details (sor_id,sor_name,sor_address,sor_phone,sor_type,com_id) VALUES ('$sID','$sName','$sAdd','$sMob','$sType','$comID')";
 	   $conn->query($sql);
 		echo "<Script>addalert(".$sID.")</Script>";
-		
+
 	   } else{
 		   $row = mysqli_fetch_assoc($result);
 	     $id=$row['sor_id'];
 		 echo "<Script>myFN(".$id.")</Script>";
 	   }
    }
-   
-   
+
+
 ?>
 
 						<div class="body">
@@ -483,7 +480,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                     </div>
                                                 </div>
                                             </div></br>
-											
+
                                             <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Mobile Number :</label>
@@ -496,7 +493,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                     </div>
                                                 </div>
                                             </div> <br>
-											
+
 										    <div class="row clearfix">
 										    	<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
 										    		<label for="password_2">Sordar Type :</label>
@@ -512,7 +509,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                           </select>
                                                 </div>
                                             </div></br>
-										    
+
 								            <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
                                                     <label for="password_2">Address :</label>
@@ -524,7 +521,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div> 		 
+                                            </div>
                                        </div>
                                        <div class="modal-footer">
                                            <button type="submit" name= "submit" id= "submit" class="btn btn-primary waves-effect">SAVE </button>
@@ -535,5 +532,5 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                </div>
                            </div>
 						</div>
-						
+
 </html>

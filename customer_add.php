@@ -4,8 +4,8 @@ $_SESSION['nav'] = 3 ;
 
 ?>
 <?php include "signin_checker.php"; ?>
-	
-	
+
+
 	<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | All Customers </title>
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -25,19 +25,19 @@ $_SESSION['nav'] = 3 ;
     <link href="css/themes/all-themes.css" rel="stylesheet" />
 	<!-- Bootstrap Material Datetime Picker Css -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  
+
     <!-- Bootstrap Select Css -->
     <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
 	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
-	
+
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 </head>
-<?php include "template/mininavbar.php" ?> 
+<?php include "template/mininavbar.php" ?>
 
 	<script>
 		function datasession(cus){
@@ -48,9 +48,9 @@ $_SESSION['nav'] = 3 ;
 				dataType:"json",
 				success : function(response){
 					 }
-					
+
 			});
-			 window.location.href="http://localhost/bfms/customer_details.php";
+			 window.location.href="customer_details";
 		}
 		function success(cus){
 			swal({
@@ -64,7 +64,7 @@ $_SESSION['nav'] = 3 ;
 			 datasession(cus);
          });
 		}
-		
+
 		function duplicate(cus){
 			swal({
            title: "Duplicate Entry!!",
@@ -86,7 +86,7 @@ $_SESSION['nav'] = 3 ;
 				swal('Please input customer name', '', 'warning')
 				return false;
 			}
-			
+
 			if (mobile==""){
 				swal('Please input mobile number', '', 'warning')
 				return false;
@@ -95,24 +95,24 @@ $_SESSION['nav'] = 3 ;
 				swal('Please input address', '', 'warning')
 				return false;
 			}
-			
-			
-			
+
+
+
 		}
 		function validation(){
-			
+
 			var name= document.getElementById('cName').value;
 			var mobile= document.getElementById('mobile').value;
 			var address= document.getElementById('address').value;
 			if(isNaN(mobile)){
 				swal('Mobile Number conatins only numbers!!', '', 'warning')
 				document.getElementById('mobile').value='';
-				return false;					
+				return false;
 			}
 			if(!isNaN(name)){
 				swal('Name conatins only letter!!', '', 'warning')
 				document.getElementById('cName').value='';
-				return false;					
+				return false;
 			}
 		}
 		   $(document).ready(function(){
@@ -123,8 +123,8 @@ $_SESSION['nav'] = 3 ;
             });
           });
         });
-		
-		
+
+
     jQuery(function ($) {
         $("#excel").click(function () {
 		d = Date.now();
@@ -141,7 +141,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                         Address: { type: String },
                         Total_Due: { type: String },
                         Total_Order: { type: String }
-                       
+
                     }
                 }
             });
@@ -190,7 +190,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             type: String,
                                             value: "Total_Order"
                                         }
-                                     
+
                                     ]
                                 }
                             ].concat($.map(data, function(item) {
@@ -212,17 +212,17 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-	
+
 	jQuery(function ($) {
         $("#pdf").click(function () {
-			
+
 		d = Date.now();
 		d = new Date(d);
 		d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
 
-			
-			
+
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -246,13 +246,13 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                 });
 
                 pdf.addPage("a4", "portrait");
-				
+
                 pdf.table(
                     50,
                     50,
                     data,
-                    [	
-					
+                    [
+
                         { field: "Customer_Name", title: "Customer_Name", width: 100 },
                         { field: "Mobile", title: "Mobile", width: 85 },
                         { field: "Address", title: "Address Type", width: 150 },
@@ -272,46 +272,46 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-		
+
 		</script>
-						
+
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
 			 <button type="button" class="col-lg-offset-10 col-md-offset-4 col-sm-offset-4 col-xs-offset-5 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW CUSTOMER </button>
-                        
+
                  <h2>
                                <b> CUSTOMER DETAILS AND INVOICE GENERATOR </b>
                  </h2>
             </div>
-			
+
 			<!-- Exportable Table -->
 			 <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-						  <div class="row clearfix">                 
+						  <div class="row clearfix">
                             <div class="col-lg-4 ">
                                <div class="form-line">
-								
+
 								<input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
-									
+
                                </div>
-                            </div>	
+                            </div>
 							<div class="col-lg-4 ">
-							
+
 							</div>
 							<div class="col-lg-2 ">
 							<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-										
-							</div>	
+
+							</div>
 							<div class="col-lg-2 ">
 							<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-										
-							</div>								
-                         </div> 
+
+							</div>
+                         </div>
                         </div>
-            
+
                         <div class="body">
                             <div class="table-responsive" style='text-align:center;'>
                                 <table style="font-size:15px;color:black;" id="exportTable"   class="table table-bordered table-striped table-hover ">
@@ -327,18 +327,18 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 											<?php } ?>
                                         </tr>
                                     </thead>
-                                    
+
                                     <tbody   id = "ajaxtable">
-									<?php 
+									<?php
 												include_once 'dbCon.php';
 												$conn= connect();
 												$comID = $_SESSION['com_id'];
 												$sql= "select *,(SUM(`total_price`)-SUM(`paid`)) as 'due',COUNT(od.order_id) as 'totalorder',
-												cs.cus_id as 'cus' from customer_details as cs LEFT OUTER JOIN 
+												cs.cus_id as 'cus' from customer_details as cs LEFT OUTER JOIN
 												order_details as od ON cs.cus_id=od.cus_id WHERE cs.com_id='$comID' group by cs.cus_id ORDER BY 'due'";
 												$resultData=$conn->query($sql);
 											    foreach ($resultData as $row){
-												
+
 										?>
                                         <tr align ="center" >
                                             <td  ><b><?=$row['cus_name']?></b></td>
@@ -354,15 +354,15 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                     </tbody>
                                 </table>
                             </div>
-							
+
                         </div>
                     </div>
                 </div>
             </div>
             <!-- #END# Exportable Table -->
-				
-			
-			
+
+
+
         </div>
     </section>
 	</body>
@@ -380,11 +380,11 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-	
+
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-	
-    
+
+
 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
@@ -394,7 +394,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 			<?php
 	include_once 'dbCon.php';
 	$conn= connect();
-	
+
    if (isset($_POST['submit'])){
 	   function generateRandomString()  {
         $characters = '0123456789';
@@ -414,7 +414,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 	   $result = $conn->query($sql);
 	   if($result->num_rows < 1){
 	   $sql = "INSERT INTO customer_details (cus_id,cus_name,cus_address,cus_phone,com_id) VALUES ('$cusID','$cName','$cAdd','$cMob','$comID')";
-	   
+
 	    if ($conn->query($sql)){
 			echo '<script>success('.$cusID.')</script>';
 		}
@@ -424,11 +424,11 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 		   echo '<Script>duplicate('.$id.')</Script>';
 	   }
    }
-   
-   
+
+
 ?>
 
-	
+
 						<div class="body">
 						<!-- Large Size -->
                            <div class="modal fade" id="largeModal" tabindex="-1" role="dialog">
@@ -451,7 +451,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                     </div>
                                                 </div>
                                             </div></br>
-											
+
                                             <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Mobile Number :</label>
@@ -464,7 +464,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                     </div>
                                                 </div>
                                             </div> <br>
-								            
+
 								            <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
                                                     <label for="password_2">Address :</label>
@@ -477,7 +477,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                     </div>
                                                 </div>
                                             </div> <br>
-											
+
                                        </div>
                                        <div class="modal-footer">
                                            <button type="submit" name= "submit" id= "submit" class="btn btn-primary">SAVE </button>
@@ -488,6 +488,6 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                </div>
                            </div>
 						</div>
-						
-		
+
+
 </html>

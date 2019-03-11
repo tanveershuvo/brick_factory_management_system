@@ -1,13 +1,14 @@
-
 <?php include "template/miniheader.php";
-	unset ($_SESSION['nav']);
-	$_SESSION['nav'] = 1 ;
-	if($_SESSION['access']==(1||2)){
-	header('location:dashboard');
-	}
+    unset($_SESSION['nav']);
+    $_SESSION['nav'] = 1 ;
+    if ($_SESSION['access']==(1||2)) {
+        echo '<script>window.location.href = "dashboard"</script>';
+    }
 ?>
 <?php include "signin_checker.php"; ?>
-<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | HOME</title>
+<title><?php if (isset($_SESSION['com_name'])) {
+    echo $_SESSION['com_name'];
+};?> | HOME</title>
 <!-- Bootstrap Core Css -->
 <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -37,7 +38,7 @@
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
-		
+
 		window.onload=function product_av(){
 		$.ajax({
 			type:'POST',
@@ -45,32 +46,22 @@
 			data:{product_details:1},
 			dataType:"json",
 			success : function(response){
-			
+
 			for(var i=0;i<response.length ;i++){
 			console.log(response[i].available)
 			if (response[i].available < 1000){
-			
-			
 			a();
-			
+					}
+				}
 			}
-			}
-			}
-			
 		});
 		}
-		
-		
-		
-        </script>
+</script>
 <script type="text/javascript">
-	
 	google.charts.load("current", {packages:['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-	
-	
+  google.charts.setOnLoadCallback(drawChart);
 	function ok(){
-		
+
 		$.ajax({
 			type:'POST',
 			url:"ajax_retrieve.php",
@@ -81,21 +72,19 @@
 				drawChart(response);
 			}
 		});
-		
-		
 	}
     window.onload = ok;
-	
+
 	function drawChart(response) {
 		dataArray = [];
 		dataArray.push(["Product Name", 'Available amount', { role: "style" } ]);
-		
+
 		var color = 33;
 		for(v in response){
-			
+
 			dataArray.push([response[v].pro_name, response[v].available,  "#b873"+color]);
 			color +=100;
-			
+
 		}
 		var data = google.visualization.arrayToDataTable(dataArray);
 		var view = new google.visualization.DataView(data);
@@ -105,7 +94,7 @@
 			type: "string",
 		role: "annotation" },
 		2]);
-		
+
 		var options = {
 			title: "Product availability",
 			width: 500,
@@ -125,12 +114,12 @@
 
 
 <?php
-	
+
 include "template/mininavbar.php" ?>
 
 
-		
-		
+
+
 <section class="content">
 	<div class="container-fluid">
 		<div class="block-header">
@@ -142,12 +131,12 @@ include "template/mininavbar.php" ?>
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
 				<div class="card">
 					<div  id ="columnchart_values" >
-						
+
 					</div>
 				</div>
 			</div>
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-				
+
 				<div class="row">
 					<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
 						<div class="info-box-2 bg-green hover-zoom-effect">
@@ -158,7 +147,7 @@ include "template/mininavbar.php" ?>
 								<div class="text">Total Order Insertion</div>
 								<div class="number">9</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 					<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
 						<div class="info-box-2 bg-blue hover-zoom-effect">
@@ -169,7 +158,7 @@ include "template/mininavbar.php" ?>
 								<div class="text">Tday's total order insertion</div>
 								<div class="number">2</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 					<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
 						<div class="info-box-2 bg-red hover-zoom-effect">
@@ -180,7 +169,7 @@ include "template/mininavbar.php" ?>
 								<div class="text">Total todays Sorder/foreman Delivery</div>
 								<div class="number">12</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 					<div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
 						<div class="info-box-2 bg-pink hover-zoom-effect">
@@ -191,7 +180,7 @@ include "template/mininavbar.php" ?>
 								<div class="text">Total todays customer order</div>
 								<div class="number">13</div>
 							</div>
-						</div>	
+						</div>
 					</div>
 				</div>
 			</div>

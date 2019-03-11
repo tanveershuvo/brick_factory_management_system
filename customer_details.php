@@ -44,7 +44,7 @@
 	function dataRetrieval(){
 		var tbody = document.getElementById("ajaxtable");
 		var tableRow="";
-		
+
 		$.ajax({
 			type:'POST',
 			url:"ajax_retrieve.php",
@@ -52,7 +52,7 @@
 			dataType:"json",
 			success : function(response){
 				/*loop start*/
-				
+
 				for(var i=0;i<response.length ;i++){
 					var a = "";
 					if((response[i].total_price - response[i].paid)==0){
@@ -62,9 +62,9 @@
 						"<span class='glyphicon glyphicon-plus'></span><span><strong>Payment</strong></span></a>";
 					}
 					var b ="";
-					
+
 					if ((response[i].total_price - response[i].paid)==0){
-						
+
 					}
 					else
 					{
@@ -77,22 +77,22 @@
 					"<td><b>"+response[i].sea_name+"</b></td>"+
 					"<td class='text-Primary'  style='text-align:center;' > <b>"+response[i].total_price+" TK</td>"+
 					"<td style='text-align:center;' > <b>"+response[i].paid+" TK</td> "+
-					"<td class='text-danger'  style='text-align:center;' > <b>"+b+"</td>"+					 
+					"<td class='text-danger'  style='text-align:center;' > <b>"+b+"</td>"+
 					"<td>"+a+"</td>"+
 					"<td><a onclick='myPrint("+response[i].order_id+")' class='btn btn-danger a-btn-slide-text'>"+
 					"<span class='glyphicon glyphicon-print'></span><span></span></a></td>"+
-					"</tr>";  
+					"</tr>";
 					/*loop end*/
 					customerDetailsRetrieve();
 				}
 				tbody.innerHTML = tableRow;
 			}
-			
+
 		});
 	}
-	
+
 	function myPrint(o_id){
-		
+
 		$.ajax({
 			type:'POST',
 			url:"ajax_retrieve.php",
@@ -100,14 +100,14 @@
 			dataType:"json",
 			success : function(response){
 			}
-			
+
 		});
-		window.open("http://localhost/bfms/customer_reciept.php");
-		
-		
+		window.open("customer_reciept.php");
+
+
 	}
-	
-	
+
+
 	function availability(){
 		var div = document.getElementById("avl");
 		var label = "";
@@ -118,7 +118,7 @@
 			data : {av:available},
 			dataType:"json",
 			success : function(response){
-				
+
 				label = "<input type='hidden' id='pro_id' name='pro_id' value='"+response[0].pro_id+"'>";
 				div.innerHTML = label;
 				document.getElementById('unip').value  = response[0].unit_price;
@@ -136,30 +136,30 @@
 			}
 		});
 	}
-	
-	
-	
+
+
+
 	function customerDetailsRetrieve(){
-		
+
 		var div = document.getElementById("customerDetails");
 		var label = "";
-		
+
 		$.ajax({
 			type:'POST',
 			url:"ajax_retrieve.php",
 			data : {"display":1},
 			dataType:"json",
 			success : function(response){
-				
+
 				label = "<label><b>TOTAL DUE : <b class='text-danger'>"+response[0].Total_Due+"  TK</label>";
 				div.innerHTML = label;
 			}
-			
+
 		});
-		
+
 	}
 	window.onload=customerDetailsRetrieve;
-	
+
 	function editAlert(){
 		swal({
 			title: "Profile Edited Succesfully",
@@ -169,10 +169,10 @@
 			closeOnConfirm: true,
 			}, function() {
 			// Redirect the user
-			window.location.href = "http://localhost/bfms/customer_details.php";
-		});			  
+			window.location.href = "customer_details";
+		});
 	}
-	
+
     function due(order_id, cus_id, paid,total_price){
 		swal({
             title: "Input Due Payment!",
@@ -181,7 +181,7 @@
             showCancelButton: true,
             closeOnConfirm: false,
             inputPlaceholder: "Input something"
-		}, 
+		},
 		function (inputValue) {
             if (inputValue === false) return false;
             if (inputValue === "") {
@@ -196,36 +196,36 @@
 				swal.showInputError("0 or minus value not accepted!");
 				return false
 			}
-			
+
 			var due = parseInt(inputValue);
 			var t = parseInt(total_price);
 			var p = parseInt(paid);
 			var pt = (due+paid);
-			
+
 			if (pt > total_price) {
 				swal.showInputError("Input amount is greater than due amount");
 				return false
 			}
-			
+
 			$.ajax({
-				
+
 				type:'POST',
 				data:{due:inputValue, oid:order_id, pid:paid},
 				url:"ajax_insertion.php",
 				success : function(){
-					
+
 					swal("Due Paid Successfully!", "Paid: " + due + " tk", "success");
 					dataRetrieval();
-					event.target.id == "messages_with_icon_title"; 
-					
+					event.target.id == "messages_with_icon_title";
+
 				}
-				
+
 			})
 		});
 	}
 	   jQuery(function ($) {
         $("#excel").click(function () {
-			
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -243,7 +243,7 @@
 					}
 				}
 			});
-			
+
             // when parsing is done, export the data to Excel
             dataSource.read().then(function (data) {
                 new shield.exp.OOXMLWorkbook({
@@ -310,9 +310,9 @@
 								type: String,
 								value: "DUE"
 							}
-							
-							
-							
+
+
+
 							]
 						}
 						].concat($.map(data, function(item) {
@@ -337,10 +337,10 @@
 			});
 		});
 	});
-	
+
 	jQuery(function ($) {
         $("#pdf").click(function () {
-			
+
 			d = Date.now();
 			d = new Date(d);
 			d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
@@ -361,22 +361,22 @@
 					}
 				}
 			});
-			
+
             // when parsing is done, export the data to PDF
             dataSource.read().then(function (data) {
                 var pdf = new shield.exp.PDFDocument({
                     author: "PrepBootstrap",
                     created: new Date()
 				});
-				
+
                 pdf.addPage("a4", "portrait");
-				
+
                 pdf.table(
 				50,
 				50,
 				data,
-				[	
-				
+				[
+
 				{ field: "RECEIPT_NO", title: "Receipt", width: 50 },
 				{ field: "ORDER_DATE", title: "Order date", width: 70 },
 				{ field: "PRODUCT_NAME", title: "Prduct", width: 50 },
@@ -399,20 +399,20 @@
 			});
 		});
 	});
-	
-	
+
+
 </script>
 
 </head>
 
-<?php include "template/mininavbar.php" ?>	
+<?php include "template/mininavbar.php" ?>
 
 <?php
 	include_once 'dbCon.php';
 	$conn= connect();
     $id= $_SESSION['cusID'];
-	$sql = "SELECT * , (SUM(total_price)-SUM(paid)) as 'Total_Due' 
-	FROM order_details as o , customer_details as c 
+	$sql = "SELECT * , (SUM(total_price)-SUM(paid)) as 'Total_Due'
+	FROM order_details as o , customer_details as c
 	WHERE o.cus_id=c.cus_id AND o.cus_id = '$id'";
 	$results=$conn->query($sql);
 	$row = mysqli_fetch_assoc($results);
@@ -421,7 +421,7 @@
 	$cp = $row['cus_phone'];
 	$ca = $row['cus_address'];
 	$td = $row['Total_Due'];
-	
+
 	if (isset($_POST['add'])){
 		$cID = $_SESSION['cusID'];
 		$proID  = $_POST['pro_id'];
@@ -435,7 +435,7 @@
 			}
 			return $randomString;
 		}
-		
+
         $order = generateRandomString();
         $pName = $_POST['product'];
         $uPrice = $_POST['u_price'];
@@ -445,31 +445,31 @@
         $date = date('d/m/Y');
 		$sID = $_SESSION['sea_id'];
 		$insertBy = $_SESSION['NAME'];
-		
-		$sql = "INSERT INTO `order_details`(`order_id`,`cus_id`, `pro_name`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`,`sea_id`,`inserted_by`) 
+
+		$sql = "INSERT INTO `order_details`(`order_id`,`cus_id`, `pro_name`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`,`sea_id`,`inserted_by`)
 		VALUES ('$order','$cID','$pName','$uPrice','$qnt','$tPrice','$pay','$date','$sID','$insertBy')";
-		
+
 		if($conn->query($sql)){
-			
+
 			$query = "select * from product_details where pro_id='$proID'";
 			$results=$conn->query($query);
 			$row = mysqli_fetch_assoc($results);
 			$aval = $row['available'];
-			
+
 			$x = ($aval - $qnt);
 			$sql = "update product_details SET available='$x' WHERE pro_id='$proID'";
 			$conn->query($sql);
 			header("Refresh:0");
 			echo "<script>myPrint('".$order."');</script>";
-			
-		} 
+
+		}
 		else
 		{
-			echo "<script>window.location.href = 'http://localhost/bfms/500.php';</script>";
+			echo "<script>window.location.href = '500';</script>";
 		}
-		
+
 	}
-?>		
+?>
 
 <section class="content">
 	<div class="container-fluid">
@@ -490,12 +490,12 @@
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="card">
 					<div class="body">
-						
+
 						<!-- Nav tabs -->
-						
+
 						<ul class="nav nav-tabs" role="tablist">
-							<?php 
-								
+							<?php
+
 								include_once 'dbCon.php';
 								$conn= connect();
 								$id = $_SESSION['com_id'];
@@ -517,19 +517,19 @@
 										<i class="material-icons">history</i> History
 									</a>
 								</li>
-								
+
 								<li role="presentation">
 									<a href="#profile_with_icon_title" data-toggle="tab">
 										<i class="material-icons">face</i> EDIT PROFILE
 									</a>
 								</li>
-								
+
 						</ul>
-						
+
 						<!-- Tab panes -->
 						<div class="tab-content">
-							<?php 
-								
+							<?php
+
 								include_once 'dbCon.php';
 								$conn= connect();
 								$id = $_SESSION['com_id'];
@@ -542,10 +542,10 @@
 									if ($day < $seaDay){ ?>
 									<div role="tabpanel" class="tab-pane fade in active" id="home_with_icon_title">
 										<!--PHP chilo-->
-										
+
 										<form class="form-horizontal"  method ="POST" >
 											<div id="avl">
-												
+
 											</div>
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
@@ -554,7 +554,7 @@
 												<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 													<select name="product" class=" show-tick" id="mySelect" onchange="availability()">
 														<option>SELECT FROM HERE</option>
-														<?php 
+														<?php
 															include_once 'dbCon.php';
 															$conn= connect();
 															$comID=$_SESSION['com_id'];
@@ -565,7 +565,7 @@
 															<option><?=$row['pro_name']?> </option>
 														<?php } ?>
 													</select>
-												</div> 
+												</div>
 											</div>
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
@@ -591,7 +591,7 @@
 													</div>
 												</div>
 											</div>
-											
+
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 													<label for="password_2">Quantity :</label>
@@ -604,8 +604,8 @@
 													</div>
 												</div>
 											</div>
-											
-											
+
+
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 													<label for="password_2">Total Price:</label>
@@ -618,7 +618,7 @@
 													</div>
 												</div>
 											</div>
-											
+
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 													<label for="password_2">Paid:</label>
@@ -631,25 +631,25 @@
 													</div>
 												</div>
 											</div>
-											
+
 											<div class="row clearfix">
 												<div class="col-lg-offset-4 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-													
+
 													<button type="submit" onclick = "return check_info();" name="add" class="col-lg-4 btn btn-primary waves-effect">  DONE  </button>
-													
+
 												</div>
 											</div>
 										</form>
-										<script>						
+										<script>
 											function findTotal(){
 												var w = document.getElementById('unip').value;
 												var h = document.getElementById('qnty').value;
 												var g = document.getElementById('pay').value;
 												var s = document.getElementById('mySelect').value;
-												
+
 												total = w * h ;
 												document.getElementById('tprc').value = total;
-												
+
 												if(isNaN(total)){
 													swal('Please enter only numbers', '', 'warning')
 													return false;
@@ -665,21 +665,21 @@
 												}
 												if(isNaN(g)){
 													swal('Please enter only numbers', '', 'warning')
-													document.getElementById('pay').value='';		
+													document.getElementById('pay').value='';
 												}
-												
-											}     
-											
+
+											}
+
 											function check_info(){
 												var un = parseFloat(document.getElementById('unip').value);
 												var qn = parseFloat(document.getElementById('qnty').value);
 												var sl = document.getElementById('mySelect').value;
-												
+
 												var av = document.getElementById('av').value;
 												var pd = 0;
-												
+
 												if (av =="product not available"){
-													
+
 													swal('Selected product is not available', '', 'error')
 													return false;
 													}else{
@@ -691,7 +691,7 @@
 														return false;
 													}
 												}
-												
+
 												if(sl=="SELECT FROM HERE"){
 													swal('Please select product name', '', 'warning')
 													return false;
@@ -712,7 +712,7 @@
 													swal('Please input in all text fields', '', 'warning')
 													return false;
 												}
-												
+
 												else if (qn < 0){
 													console.log(qn)
 													swal('Minus value not accepted', '', 'warning')
@@ -729,18 +729,18 @@
 													document.getElementById('tprc').value='';
 													return false;
 												}
-												
+
 												else if (!Number.isInteger(qn)){
-													
+
 													swal('Float Number is not accepted', '', 'warning')
 													document.getElementById('qnty').value='';
 													document.getElementById('pay').value='';
 													document.getElementById('tprc').value='';
 													return false;
 												}
-												
-												
-												
+
+
+
 												else{
 													pd = parseFloat(document.getElementById('pay').value);
 													tp = parseFloat(document.getElementById('tprc').value);
@@ -748,20 +748,20 @@
 														swal('Incorrect Payment insertion!', 'Payment is more than total price!!',  'warning')
 														return false;
 													}
-													
+
 													else{
 														return true;
 													}
 												}
-											}	  
-											
+											}
+
 										</script>
-										
-										
+
+
 									</div>
 								<?php }}?>
 								<div role="tabpanel" class="tab-pane fade" id="profile_with_icon_title">
-									<?php 
+									<?php
 										include_once 'dbCon.php';
 										$conn= connect();
 										if (isset($_POST['edit'])){
@@ -769,18 +769,18 @@
 											$ecn = $_POST['cus_name'];
 											$ecm = $_POST['mob'];
 											$eca = $_POST['addrs'];
-											
+
 											$sql = "UPDATE customer_details SET `cus_name` = '$ecn' , `cus_phone` = '$ecm',`cus_address`='$eca' WHERE cus_id = '$id'";
 											if ($conn->query($sql)){
 												echo '<script type="text/javascript"> editAlert(); </script>';
 											}
 											else
 											{
-												echo '<script type="text/javascript"> window.location.href = "http://localhost/bfms/index.php";</script>';
+												echo '<script type="text/javascript"> window.location.href = "index";</script>';
 											}
-											
+
 										}
-										
+
 									?>
 									<form class="form-horizontal" method ="POST" >
 										<div class="row clearfix">
@@ -795,7 +795,7 @@
 												</div>
 											</div>
 										</div></br>
-										
+
 										<div class="row clearfix">
 											<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 												<label for="password_2">Mobile Number :</label>
@@ -808,7 +808,7 @@
 												</div>
 											</div>
 										</div> <br>
-										
+
 										<div class="row clearfix">
 											<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
 												<label for="password_2">Address :</label>
@@ -820,27 +820,27 @@
 													</div>
 												</div>
 											</div>
-										</div> 
-										
-										
+										</div>
+
+
 										<div class="row clearfix">
 											<div class="col-lg-offset-4 col-md-offset-2 col-sm-offset-4 col-xs-offset-5">
-												
+
 												<button type="submit" onclick=" return MyFn2()" name="edit" class="btn btn-primary m-t-30 waves-effect">EDIT DONE</button>
-												
+
 											</div>
 										</div>
 									</form>
 								</div>
 								<script>
-									
+
 									function MyFn2(){
 										var name= document.getElementById('cName').value;
 										var mobile= document.getElementById('mobile').value;
 										var address= document.getElementById('address').value;
 										if (name==""){
 											swal('Please input customer name', '', 'warning')
-											return false;					
+											return false;
 										}
 										if (mobile==""){
 											swal('Please input mobile number', '', 'warning')
@@ -853,28 +853,28 @@
 										if(isNaN(mobile)){
 											swal('Mobile Number conatins only numbers!!', '', 'warning');
 											document.getElementById('mobile').value = '';
-											return false;					
+											return false;
 										}
 										if(mobile.length != 11){
 											swal('Mobile Number Must be 11 digit!!', '', 'warning');
-											return false;					
+											return false;
 										}
 									}
-									
-									
-								</script>							
+
+
+								</script>
 								<div role="tabpanel" class="tab-pane fade" id="messages_with_icon_title">
-									<div class="body">	
-										
+									<div class="body">
+
 										<div class="table-responsive">
 											<div class="col-lg-2 ">
 											<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-											
-										</div>	
+
+										</div>
 										<div class="col-lg-2 ">
 										<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-										
-									</div>	
+
+									</div>
 									<table id = "exportTable" class="table table-bordered table-striped table-hover js-basic-example dataTable">
 										<thead>
 											<tr>
@@ -888,17 +888,17 @@
 												<th>DUE</th>
 												<th>DUE_PAYMENT</th>
 												<th>PRINT</th>
-												
+
 											</tr>
 										</thead>
-										
+
 										<tbody id="ajaxtable" align="center">
-											
+
 										</tbody>
 									</table>
 								</div>
 								</div>
-								</div> 
+								</div>
 						</div>
 					</div>
 				</div>

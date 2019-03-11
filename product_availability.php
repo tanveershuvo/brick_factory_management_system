@@ -1,10 +1,12 @@
 <?php include "template/miniheader.php" ;
-	unset ($_SESSION['nav']);
-	$_SESSION['nav'] = 2 ;
+    unset($_SESSION['nav']);
+    $_SESSION['nav'] = 2 ;
 
 ?>
 <?php include "signin_checker.php" ?>
-		<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | Product Details</title>
+		<title><?php if (isset($_SESSION['com_name'])) {
+    echo $_SESSION['com_name'];
+};?> | Product Details</title>
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -29,7 +31,7 @@
 	 	window.onload=function dataRetrieval(){
 		   	 var tbody = document.getElementById("ajaxtable");
 			  var tableRow="";
-			  
+
 			  $.ajax({
 				type:'POST',
 				url:"ajax_retrieve.php",
@@ -37,25 +39,25 @@
 				dataType:"json",
 				success : function(response){
 				     /*loop start*/
-					 
+
 					 for(var i=0;i<response.length ;i++){
-						
+
 					 tableRow += "<tr><td style=' text-align:center'; ><b>"+response[i].pro_name+"</b></td>"+
 					 "<td style=' text-align:center'; ><b>"+response[i].unit_price+"</b> Tk</td>"+
 					 "<td style=' text-align:center'; ><b>"+response[i].available+"</b> pcs</td>"+
-					 "<td style=' text-align:center'; ><a onclick='available("+response[i].pro_id+","+response[i].available+")' class='btn btn-success waves-effect' role='button'><span class='glyphicon glyphicon-plus'></span>ADD AMOUNT</a></td>"+    
+					 "<td style=' text-align:center'; ><a onclick='available("+response[i].pro_id+","+response[i].available+")' class='btn btn-success waves-effect' role='button'><span class='glyphicon glyphicon-plus'></span>ADD AMOUNT</a></td>"+
 					 "<td style=' text-align:center';  ><a onclick='edit("+response[i].pro_id+")' class='btn btn-primary a-btn-slide-text' data-toggle='modal' data-target='#edit_modal'>"+
 					 "<span class='glyphicon glyphicon-plus'></span><span><strong>EDIT</strong></span></a></td>"+
-					 "</tr>";  
+					 "</tr>";
 					 /*loop end*/
-					 }		
+					 }
 					tbody.innerHTML = tableRow;
 				}
-			
+
 			});
 			}
 			function edit(pro_id){
-			
+
 			  $.ajax({
 				type:'POST',
 				url:"ajax_retrieve.php",
@@ -77,8 +79,8 @@
 						  closeOnConfirm: true,
                         }, function() {
                             // Redirect the user
-                            window.location.href = "http://localhost/bfms/product_availability.php";
-                          });			  
+                            window.location.href = "product_availability.php";
+                          });
 		  }
 	 function addAlert(){
        			  swal({
@@ -88,10 +90,10 @@
                           confirmButtonText: "OK",
 						  closeOnConfirm: true,
                         }, function() {
-                            window.location.href = "http://localhost/bfms/product_availability";
-                          });			  
+                            window.location.href = "product_availability";
+                          });
 		  }
-		  
+
 	function wrongalert(){
        			  swal({
                           title: "Duplicate Product Entry",
@@ -100,11 +102,11 @@
                           confirmButtonText: "OK",
 						  closeOnConfirm: true,
                         }, function() {
-                            window.location.href = "http://localhost/bfms/product_availability";
-                          });			  
+                            window.location.href = "product_availability";
+                          });
 		  }
-		  
-		  
+
+
 	 function available(pro_id, available){
           	swal({
             title: "Input available amount!",
@@ -113,7 +115,7 @@
             showCancelButton: true,
             closeOnConfirm: false,
             inputPlaceholder: "Input something"
-          }, 
+          },
 		  function (inputValue) {
             if (inputValue === false) return false;
             if (inputValue === "") {
@@ -128,9 +130,9 @@
               swal.showInputError("0 or minus value not accepted!");
               return false
             }
-			
+
 			$.ajax({
-				
+
 				type:'POST',
 				data:{amount:inputValue,av:available, proid:pro_id},
 				url:"ajax_insertion.php",
@@ -143,43 +145,43 @@
                       confirmButtonText: "Done",
                     },
                     function(){
-                      window.location.href="http://localhost/bfms/product_availability.php";
+                      window.location.href="product_availability.php";
                     });
 				}
-				
+
 			})
           });
 		  }
-		
+
 		function validation(){
-			
+
 			var unit_price= document.getElementById('up').value;
-			
+
 			if(isNaN(unit_price)){
 				swal('Only numbers are allowed!!', '', 'warning')
-				return false;					
+				return false;
 			}
 			var unirice= document.getElementById('unit_price').value;
-			
+
 			if(isNaN(unirice)){
 				swal('Only numbers are allowed!!', '', 'warning')
-				return false;					
+				return false;
 			}
-		}				
+		}
 		function check_info(){
 			var pn= document.getElementById('pn').value;
 			var up= document.getElementById('up').value;
-			
+
 			if (pn==""){
 				swal('Please input product name', '', 'warning')
 				return false;
 			}
-			
+
 			if (up==""){
 				swal('Please input product price', '', 'warning')
 				return false;
 			}
-			
+
 		}
 		function check_edit_info(){
 			var pro_name= document.getElementById('pro_name').value;
@@ -212,11 +214,10 @@ a.btn:hover {
 
 </style>
 	`</head>
- 
 
 <?php include "template/mininavbar.php" ?>
 
-				
+
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -224,7 +225,7 @@ a.btn:hover {
                                 ADD PRODUCT /EDIT PRODUCT /PRODUCT AVAILABILITY
                  </h2>
             </div>
-			
+
 			<!-- Exportable Table -->
      <div class="row clearfix">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -233,7 +234,7 @@ a.btn:hover {
 		<button type="button" class="col-lg-offset-9 col-md-offset-4 col-sm-offset-4 col-xs-offset-5 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW PRODUCT DETAILS </button></div>
 			<div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    
+
                         <div class="table-responsive">
                                         <table  id = "table" class="table table-bordered table-striped table-hover ">
                                             <thead>
@@ -243,24 +244,24 @@ a.btn:hover {
                                                     <th style=' text-align:center'  >AMOUNT OF BRICKS</th>
                                                     <th style=' text-align:center'  >ADD AMOUNT</th>
                                                     <th style=' text-align:center'  >ACTION</th>
-													
-                                                    
+
+
                                                 </tr>
                                             </thead>
-											
+
 											<tbody id="ajaxtable">
-                                        
+
 										     </tbody>
 											</table>
-										</div>		
-                                      
-						
-					
+										</div>
+
+
+
 				</div>
 			</div>
-			
-									
-                    
+
+
+
                 </div>
             </div>
             <!-- #END# Custom Content -->
@@ -293,28 +294,26 @@ a.btn:hover {
     <!-- Demo Js -->
     <script src="js/demo.js"></script>
 	<?php
-	include_once 'dbCon.php';
+    include_once 'dbCon.php';
     $conn= connect();
-	
-	if (isset($_POST['submit'])){
-		$comID		=$_SESSION['com_id'];
+
+    if (isset($_POST['submit'])) {
+        $comID		=$_SESSION['com_id'];
         $productname = $_POST['pro_name'];
         $unitprice 	 = $_POST['u_price'];
-		$comID = $_SESSION['com_id'];
-		$sql = "SELECT * from product_details where com_id='$comID' and pro_name='$productname'";
-		
-		$result = $conn->query($sql);
-		if($result->num_rows < 1){
-			$sql = "INSERT INTO `product_details`(`pro_name`,`unit_price`,`com_id`) VALUES ('$productname','$unitprice','$comID')";
-			$conn->query($sql);
-			echo '<script type="text/javascript"> addAlert(); </script>';		
-			}
-		else
-		{
-			echo '<script type="text/javascript"> wrongalert(); </script>';
-			}
-		}
-	?>
+        $comID = $_SESSION['com_id'];
+        $sql = "SELECT * from product_details where com_id='$comID' and pro_name='$productname'";
+
+        $result = $conn->query($sql);
+        if ($result->num_rows < 1) {
+            $sql = "INSERT INTO `product_details`(`pro_name`,`unit_price`,`com_id`) VALUES ('$productname','$unitprice','$comID')";
+            $conn->query($sql);
+            echo '<script type="text/javascript"> addAlert(); </script>';
+        } else {
+            echo '<script type="text/javascript"> wrongalert(); </script>';
+        }
+    }
+    ?>
 	<!-- CREATE MODAL ----------------------------------------------------------------------------------------------------------------------------->
 					<div class="body">
                            <div class="modal fade" id="largeModal" tabindex="-1" role="dialog">
@@ -325,8 +324,8 @@ a.btn:hover {
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >
-                                           
-											
+
+
                                             <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Name :</label>
@@ -339,7 +338,7 @@ a.btn:hover {
                                                     </div>
                                                 </div>
                                             </div> <br>
-											
+
 											 <div class="row clearfix">
                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                    <label for="password_2">Unit Price :</label>
@@ -347,39 +346,38 @@ a.btn:hover {
                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
                                                    <div class="form-group">
                                                        <div class="form-line">
-                                                           <input type="text" name="u_price"  id="up" oninput="validation()" class="form-control" placeholder="Enter Rate"> 
+                                                           <input type="text" name="u_price"  id="up" oninput="validation()" class="form-control" placeholder="Enter Rate">
                                                        </div>
                                                    </div>
                                                </div>
-                                           </div><br>	 
+                                           </div><br>
                                        </div>
                                        <div class="modal-footer">
                                            <button type="submit" name= "submit" id= "submit" class="btn btn-primary">SAVE </button>
                                            <button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
                                        </div>
-									   <div> 
+									   <div>
 									   </form>
                                    </div>
                                </div>
                            </div>
 						</div>
-						
-				
-						
+
+
+
 						<!-- CREATE MODAL ----------------------------------------------------------------------------------------------------------------------------->
-		<?php if (isset($_POST['done'])){
-			 $id = $_POST['pro_id'];
-			 $productname 	= $_POST['proname'];
-             $unitprice 	= $_POST['uprice'];
-			 $sql = "UPDATE product_details SET pro_name='$productname',unit_price='$unitprice' WHERE pro_id='$id'";
-			 //echo $sql;exit;
-			 if($conn->query($sql)){
-		     echo '<script type="text/javascript"> editAlert(); </script>';
-			 
-			}else{
-					 echo "<script>window.location.href = 'http://localhost/bfms/500.php';</script>";
-			}
-	} ?>
+		<?php if (isset($_POST['done'])) {
+        $id = $_POST['pro_id'];
+        $productname 	= $_POST['proname'];
+        $unitprice 	= $_POST['uprice'];
+        $sql = "UPDATE product_details SET pro_name='$productname',unit_price='$unitprice' WHERE pro_id='$id'";
+        //echo $sql;exit;
+        if ($conn->query($sql)) {
+            echo '<script type="text/javascript"> editAlert(); </script>';
+        } else {
+            echo "<script>window.location.href = '500';</script>";
+        }
+    } ?>
 						<!-- EDIT MODAL ----------------------------------------------------------------------------------------------------------------------------->
 					<div class="body">
                            <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog">
@@ -391,7 +389,7 @@ a.btn:hover {
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" name="editable" onsubmit="return check_edit_info();" method ="POST" >
                                             <input type="hidden" name="pro_id" id="pro_id">
-											
+
                                             <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Name :</label>
@@ -404,8 +402,8 @@ a.btn:hover {
                                                     </div>
                                                 </div>
                                             </div> <br>
-										    
-											
+
+
 											<div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label >Unit Price :</label>
@@ -418,9 +416,9 @@ a.btn:hover {
                                                     </div>
                                                 </div>
                                             </div></br>
-											
-											
-                                       
+
+
+
                                        <div class="modal-footer">
                                            <button type="submit" name= "done" id= "submit" class="btn btn-primary">SAVE </button>
                                            <button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
