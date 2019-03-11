@@ -47,7 +47,7 @@
 					$conn= connect();
 					$com=$_SESSION['com_id'];
 					$sql1="	select sea_name,sea_budget,sum(paid) ,c.com_id
-						from sordar_weekly_bill sw,season s, company c,order_details od 
+						from season s, company c,order_details od 
 						where od.sea_id=s.sea_id
 						and s.com_id=c.com_id  
 						GROUP by od.sea_id
@@ -91,7 +91,7 @@
 						and sds.sea_id=s.sea_id
 						and s.com_id=c.com_id  
 						group by sw.sea_id , od.sea_id
-						having c.com_id=1";
+						having c.com_id='$com'";
 					$results = $conn->query($sql1);
 					while($row=mysqli_fetch_array($results))
 					{

@@ -15,8 +15,6 @@
 <link href="plugins/animate-css/animate.css" rel="stylesheet" />
 <!-- Sweet Alert Css -->
 <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
-
-
 <!-- Custom Css -->
 <link href="css/style.css" rel="stylesheet">
 

@@ -46,7 +46,7 @@
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 		
 		
-		<?php include "template/mininavbar.php" ?>	
+		<?php include "template/mininavbar.php";?>	
 		<script>
 			function dataRetrieval(){
 				var tbody = document.getElementById("ajaxtable");
@@ -61,6 +61,7 @@
 						for(var i=0;i<response.length ;i++){
 							tableRow += "<tr><td  style='text-align:center;' > "+response[i].date+"</td>"+
 							"<td style='text-align:center;' > "+response[i].weekly_bill+" TK</td>"+
+							"<td style='text-align:center;' > "+response[i].sea_name+"</td>"+
 							"<td style='text-align:center;' > "+response[i].paid_by+"</td> "+
 							"</tr>";  
 						}
@@ -270,11 +271,11 @@
 	<?php
 		include_once 'dbCon.php';
 		$conn= connect();
+		
 		$id= $_SESSION['sordar_id'];
 		$sql = "SELECT * FROM sordar_details WHERE sor_id = '$id'";
 		$results=$conn->query($sql);
 		$row = mysqli_fetch_assoc($results);
-		$_SESSION['sordar_id']=$row['sor_id'];
 		$cn = $row['sor_name'];
 		$cp = $row['sor_phone'];
 		$ca = $row['sor_address'];
@@ -363,7 +364,6 @@
 									<i class="material-icons">history</i>TOTAL DELIVERED 
 								</a>
 							</li>
-							
 							
 							<li role="presentation" >
 								<a onclick="(dataRetrieval()& weeklytotalretrieve())" href="#messages_with_icon_title" data-toggle="tab">
@@ -477,7 +477,9 @@
 									
 									$sID = $_SESSION['sea_id'];
 									$sorID = $_SESSION['sordar_id'];
-									$sql = "SELECT * FROM sordar_delivery_status WHERE sea_id = '$sID' AND sor_id = '$sorID' ORDER BY delivery_date";
+								$sql = "SELECT * FROM sordar_delivery_status as sd, season as s 
+								WHERE sd.sea_id=s.sea_id AND sd.sea_id = '$sID' AND sor_id = '$sorID' ORDER BY sd.delivery_date";
+							
 									$resultdata=$conn->query($sql);
 									
 									
@@ -580,6 +582,7 @@
 										<thead>                                                <tr >
 											<th style="text-align:center;">PAYMENT DATE</th>
 											<th style="text-align:center;">WEEKLY BILL</th>
+											<th style="text-align:center;">SEASON NAME </th>
 											<th style="text-align:center;">PAID BY</th>
 										</tr>
 										</thead>
@@ -610,6 +613,7 @@
 												<th style="text-align:center">AMOUNT OF BRICKS</th>
 												<th style="text-align:center">RATE</th>
 												<th style="text-align:center">TOTAL BILL</th>
+												<th style="text-align:center">SEASON</th>
 												<th style="text-align:center">INSERTED BY</th>
 												
 											</tr>
@@ -627,6 +631,7 @@
 													<td><?=$view['amount']?></td>
 													<td><?=$view['rate']?> tk</td>
 													<td><?=$view['total_bill']?> tk</td>
+													<td><?=$view['sea_name']?></td>
 													<td><?=$view['inserted_by']?></td>
 												</tr>
 												
@@ -702,19 +707,17 @@
 <script>
 	function checkInfo(){
 		
-		
+		var total = document.getElementById('total').value;
 		if(document.getElementById('amount').value==""){
 			swal('Please input in all text fields', '', 'error')
 			return false;
 		}
-		if(document.getElementById('rate').value==""){
-			swal('Please input in all text fields', '', 'error')
-			return false;
-		}
+		
 		if(document.getElementById('total').value==""){
 			swal('Please input in all text fields', '', 'error')
 			return false;
 		}
+		
 		
 		
 	}
@@ -734,7 +737,10 @@
 			swal('Please enter only numbers', '', 'error')
 			document.getElementById('rate').value='';
 		}
-		
+		if(isNaN(total)){
+			swal('Please enter only numbers', '', 'error')
+			document.getElementById('total').value='';
+		}
 		
 	}
 </script>
@@ -792,7 +798,7 @@
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" name="amount" oninput="MYFN()"  id="amount" class="form-control" placeholder="Enter Mobile number" >
+										<input type="text" name="amount" oninput="MYFN()"  id="amount" class="form-control" placeholder="Enter Amount" >
 									</div>
 								</div>
 							</div>
@@ -805,7 +811,7 @@
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" name="rate" id="rate" oninput="MYFN()" class="form-control" placeholder="Enter Address " >
+										<input type="text" name="rate" id="rate" oninput="MYFN()" class="form-control" placeholder="Enter RAte " >
 									</div>
 								</div>
 							</div>
@@ -818,7 +824,7 @@
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" name="total" id="total" class="form-control" placeholder="Enter Address " >
+										<input type="text" name="total" oninput="MYFN()" id="total" class="form-control" placeholder="Enter bill " >
 									</div>
 								</div>
 							</div>

@@ -99,8 +99,19 @@
 
 
 <?php
-
- include "template/mininavbar.php" ?>
+	include "template/mininavbar.php" ;
+	include_once 'dbCon.php';
+	$conn= connect();
+	$sID = $_SESSION['com_id'];
+	$sql="select count(cus_id) as 't' from customer_details where com_id='$sID'";
+	$resultdata=$conn->query($sql);
+	$row = mysqli_fetch_assoc($resultdata);
+	$x = $row['t'];
+	$sql1="select count(emp_id) as 'c' from employee_details where com_id='$sID'";
+	$result=$conn->query($sql1);
+	$rows = mysqli_fetch_assoc($result);
+	$y = $rows['c'];
+?>
 
     <section class="content">
         <div class="container-fluid">
@@ -117,7 +128,7 @@
                         </div>
                         <div class="content">
                             <div class="text">Total Order</div>
-                            <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">42</div>
+                            <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">4</div>
                         </div>
                     </div>
                 </div>
@@ -128,7 +139,7 @@
                         </div>
                         <div class="content">
                             <div class="text">Total Employee</div>
-                            <div class="number count-to" data-from="0" data-to="257" data-speed="1000" data-fresh-interval="20">124</div>
+                            <div class="number count-to" data-from="0" data-to="257" data-speed="1000" data-fresh-interval="20"><?=$y?></div>
                         </div>
                     </div>
                 </div>
@@ -139,7 +150,7 @@
                         </div>
                         <div class="content">
                             <div class="text">Total Customer</div>
-                            <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20">222</div>
+                            <div class="number count-to" data-from="0" data-to="243" data-speed="1000" data-fresh-interval="20"><?=$x?></div>
                         </div>
                     </div>
                 </div>
@@ -150,7 +161,7 @@
                         </div>
                         <div class="content">
                             <div class="text">Total Sordar</div>
-                            <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20">123</div>
+                            <div class="number count-to" data-from="0" data-to="1225" data-speed="1000" data-fresh-interval="20">3</div>
                         </div>
                     </div>
                 </div>
@@ -213,52 +224,7 @@
             </div>
             <!-- #END# Counter Examples -->		
 			
-			  <div class="row clearfix">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box hover-expand-effect">
-                        <div class="icon bg-teal">
-                            <i class="material-icons">attach_money</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">Salary Information</div>
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box hover-expand-effect">
-                        <div class="icon bg-green">
-                            <i class="material-icons">invert_colors</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">Fuel Information</div>
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box hover-expand-effect">
-                        <div class="icon bg-light-green">
-                            <i class="material-icons">settings</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">Machinary Information</div>
-                            
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box hover-expand-effect">
-                        <div class="icon bg-lime">
-                            <i class="material-icons">view_list</i>
-                        </div>
-                        <div class="content">
-                            <div class="text">Others Information</div>
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+			  
 			<div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="info-box bg-pink hover-zoom-effect">

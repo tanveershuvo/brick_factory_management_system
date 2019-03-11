@@ -10,7 +10,7 @@
 <title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | HOME</title>
 <!-- Bootstrap Core Css -->
 <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
-
+<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <!-- Waves Effect Css -->
 <link href="plugins/node-waves/waves.css" rel="stylesheet" />
 
@@ -35,6 +35,34 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+		
+		window.onload=function product_av(){
+		$.ajax({
+			type:'POST',
+			url:"ajax_retrieve.php",
+			data:{product_details:1},
+			dataType:"json",
+			success : function(response){
+			
+			for(var i=0;i<response.length ;i++){
+			console.log(response[i].available)
+			if (response[i].available < 1000){
+			
+			
+			a();
+			
+			}
+			}
+			}
+			
+		});
+		}
+		
+		
+		
+        </script>
 <script type="text/javascript">
 	
 	google.charts.load("current", {packages:['corechart']});
@@ -92,6 +120,7 @@
 	setInterval(ok , 5000);
 </script>
 
+
 </head>
 
 
@@ -99,12 +128,15 @@
 	
 include "template/mininavbar.php" ?>
 
+
+		
+		
 <section class="content">
 	<div class="container-fluid">
 		<div class="block-header">
 			<h2>DASHBOARD</h2>
 		</div>
-		
+
 		<!-- Basic Alerts -->
 		<div class="row clearfix">
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -192,6 +224,8 @@ include "template/mininavbar.php" ?>
 <!-- Waves Effect Plugin Js -->
 <script src="plugins/node-waves/waves.js"></script>
 
+    <script src="js/notify.js"></script>
+	<script src="js/notiy.min.js"></script>
 <!-- Custom Js -->
 <script src="js/admin.js"></script>
 <script src="js/pages/forms/form-wizard.js"></script>

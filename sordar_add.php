@@ -53,6 +53,19 @@ $_SESSION['nav'] = 8 ;
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 	<script>
 	    
+		function addalert(){
+			swal({
+           title: "ADD Successfully!!",
+           text: "This account has been created",
+           type: "success",
+           confirmButtonClass: "btn-primary",
+           confirmButtonText: "OK!"
+         },
+         function(){
+           window.location.href= "http://localhost/bfms/sordar_add";
+         });
+		}
+		
 		function myFN(id){
 		swal({
            title: "Duplicate Entry!!",
@@ -62,9 +75,10 @@ $_SESSION['nav'] = 8 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/sordar_details.php";
+           window.location.href= "http://localhost/bfms/sordar_details";
          });
 		}
+		
 	</script>
 </head>
 
@@ -328,10 +342,9 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <th  style='text-align:center;'>Sordar_Mobile</th>
                                             <th  style='text-align:center;'>Sordar_Address</th>
                                             <th  style='text-align:center;'>Sordar_Type</th>
-											<?php if($_SESSION['access']==(0)){?>
+											
                                             <th  style='text-align:center;'>Action</th>
-											<?php } ?>
-                                        </tr>
+						</tr>
                                     </thead>
                                   
                                     <tbody id = "ajaxtable"> 
@@ -339,7 +352,9 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 												include_once 'dbCon.php';
 												$conn= connect();
 												$comID = $_SESSION['com_id'];
+												
 												$sql= "SELECT * from sordar_details where com_id='$comID'";
+												
 												$resultData=$conn->query($sql);
 											    foreach ($resultData as $row){
 												
@@ -349,11 +364,10 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <td><?=$row['sor_phone']?></td>
                                             <td><?=$row['sor_address']?></td>
                                             <td><?=$row['sor_type']?></td>
-											<?php if($_SESSION['access']==(0)){?>
 											<td><a onclick="datasession(<?=$row['sor_id']?>)" class="hide-from-printer btn btn-primary btn-circle waves-effect waves-circle waves-float"><i class="material-icons">input</i></a></td>
-                                            <?php } ?>
+                                           
                                         </tr>
-												<?php } ?>
+												<?php }  ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -427,16 +441,16 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 	   $sID = generateRandomString();
 	   $sName = $_POST['sor_name'];
 	   $sMob = $_POST['mob'];
+	   $comID = $_SESSION['com_id'];
 	   $sAdd = $_POST['addrs'];
 	   $sType = $_POST['sor_type'];
 	   $sql = "SELECT * FROM sordar_details WHERE sor_name='$sName' AND sor_phone='$sMob'";
 	   $result = $conn->query($sql);
 	   if($result->num_rows < 1){
-	   $sql = "INSERT INTO sordar_details (sor_id,sor_name,sor_address,sor_phone,sor_type) VALUES ('$sID','$sName','$sAdd','$sMob','$sType')";
-	 
-	    if ($conn->query($sql)){
-		 echo "<Script>window.location.href= 'http://localhost/bfms/sordar_details.php?sID=".$sID."';<Script>";
-		}
+	   $sql = "INSERT INTO sordar_details (sor_id,sor_name,sor_address,sor_phone,sor_type,com_id) VALUES ('$sID','$sName','$sAdd','$sMob','$sType','$comID')";
+	   $conn->query($sql);
+		echo "<Script>addalert(".$sID.")</Script>";
+		
 	   } else{
 		   $row = mysqli_fetch_assoc($result);
 	     $id=$row['sor_id'];
@@ -453,7 +467,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                <div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
                                        <div class="modal-header">
-                                           <h4 class="modal-title" id="largeModalLabel">Insert Sordars Information here :</h4>
+                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert Sordars Information here :</h4><hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >

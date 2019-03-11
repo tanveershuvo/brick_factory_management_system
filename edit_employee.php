@@ -1,3 +1,4 @@
+<div class="modal fade" id="edit_modal<?=$row['emp_id']?>" tabindex="-1" role="dialog">
 <?php
 	include_once 'dbCon.php';
 	$conn= connect();
@@ -11,9 +12,7 @@
 	$mob	 	= mysqli_real_escape_string($conn,$_POST['phone']);
 	$addrs 		= mysqli_real_escape_string($conn,$_POST['addres']);
 	$sql = "Update employee_details SET emp_name='$emp_name',emp_email='$email',emp_address='$addrs',emp_phone='$mob',emp_des='$des',emp_salary='$msalary' WHERE emp_id='$eID' ";
-	
 	$results=$conn->query($sql);
-	
 	}
 	if (isset($row['emp_id'])){
 	$SQL = "select * from employee_details where emp_id = ".$row['emp_id']."";
@@ -27,14 +26,12 @@
 	$phone = $row['emp_phone'];
 	
 	}
-	
-
 ?>		
-                           <div class="modal fade" id="edit_modal<?=$row['emp_id']?>" tabindex="-1" role="dialog">
+                           
                                <div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
 									   <div class="modal-header">
-                                           <h4 class="modal-title" align="center" >Edit Employee Information Here </h4><hr>
+                                           <h4 class="modal-title" align="center" >Edit<?=$row['emp_id']?> Employee Information Here </h4><hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_in();" method ="POST" >
@@ -162,6 +159,16 @@
 			}
 			
 			
+		}
+		function valmail(){
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById('email').value)){
+			document.getElementById('msg4').innerHTML = "";
+				return (true)
+			} else{
+			document.getElementById('msg4').innerHTML = "**You have entered an invalid email address!!!";
+			
+				return (false)	
+			}
 		}
 		function validate(){
 			var salary= document.getElementById('eMonthly').value;

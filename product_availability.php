@@ -70,7 +70,7 @@
 			}
 	 function editAlert(){
        			  swal({
-                          title: "Profile Edited Succesfully",
+                          title: "Product Edited Succesfully",
                           type: "success",
                           confirmButtonClass: "btn-primary",
                           confirmButtonText: "OK",
@@ -88,9 +88,22 @@
                           confirmButtonText: "OK",
 						  closeOnConfirm: true,
                         }, function() {
-                            window.location.href = "http://localhost/bfms/product_availability.php";
+                            window.location.href = "http://localhost/bfms/product_availability";
                           });			  
 		  }
+		  
+	function wrongalert(){
+       			  swal({
+                          title: "Duplicate Product Entry",
+                          type: "error",
+                          confirmButtonClass: "btn-primary",
+                          confirmButtonText: "OK",
+						  closeOnConfirm: true,
+                        }, function() {
+                            window.location.href = "http://localhost/bfms/product_availability";
+                          });			  
+		  }
+		  
 		  
 	 function available(pro_id, available){
           	swal({
@@ -137,7 +150,49 @@
 			})
           });
 		  }
-		 
+		
+		function validation(){
+			
+			var unit_price= document.getElementById('up').value;
+			
+			if(isNaN(unit_price)){
+				swal('Only numbers are allowed!!', '', 'warning')
+				return false;					
+			}
+			var unirice= document.getElementById('unit_price').value;
+			
+			if(isNaN(unirice)){
+				swal('Only numbers are allowed!!', '', 'warning')
+				return false;					
+			}
+		}				
+		function check_info(){
+			var pn= document.getElementById('pn').value;
+			var up= document.getElementById('up').value;
+			
+			if (pn==""){
+				swal('Please input product name', '', 'warning')
+				return false;
+			}
+			
+			if (up==""){
+				swal('Please input product price', '', 'warning')
+				return false;
+			}
+			
+		}
+		function check_edit_info(){
+			var pro_name= document.getElementById('pro_name').value;
+			var unit_price= document.getElementById('unit_price').value;
+			if (pro_name==""){
+				swal('Please input product name', '', 'warning')
+				return false;
+			}
+			if (unit_price==""){
+				swal('Please input  unit Price', '', 'warning')
+				return false;
+			}
+		}
 
 	</script>
 	<style>
@@ -242,15 +297,22 @@ a.btn:hover {
     $conn= connect();
 	
 	if (isset($_POST['submit'])){
+		$comID		=$_SESSION['com_id'];
         $productname = $_POST['pro_name'];
         $unitprice 	 = $_POST['u_price'];
 		$comID = $_SESSION['com_id'];
-	    $sql = "INSERT INTO `product_details`(`pro_name`,`unit_price`,`com_id`) VALUES ('$productname','$unitprice','$comID')";
-		if($conn->query($sql)){
+		$sql = "SELECT * from product_details where com_id='$comID' and pro_name='$productname'";
+		
+		$result = $conn->query($sql);
+		if($result->num_rows < 1){
+			$sql = "INSERT INTO `product_details`(`pro_name`,`unit_price`,`com_id`) VALUES ('$productname','$unitprice','$comID')";
+			$conn->query($sql);
 			echo '<script type="text/javascript"> addAlert(); </script>';		
-			}else{
-			
-			}			
+			}
+		else
+		{
+			echo '<script type="text/javascript"> wrongalert(); </script>';
+			}
 		}
 	?>
 	<!-- CREATE MODAL ----------------------------------------------------------------------------------------------------------------------------->
@@ -259,7 +321,7 @@ a.btn:hover {
                                <div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
                                        <div class="modal-header">
-                                           <h4 class="modal-title" id="largeModalLabel">Insert Product Details here :</h4>
+                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert Product Details here :</h4><hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >
@@ -272,7 +334,7 @@ a.btn:hover {
                                                 <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" name="pro_name"  id="Name" class="form-control" placeholder="Enter Product Name" >
+                                                            <input type="text" name="pro_name"  id="pn" class="form-control" placeholder="Enter Product Name" >
                                                         </div>
                                                     </div>
                                                 </div>
@@ -285,7 +347,7 @@ a.btn:hover {
                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
                                                    <div class="form-group">
                                                        <div class="form-line">
-                                                           <input type="text" name="u_price"  id="date" class="form-control" placeholder="Enter Rate"> 
+                                                           <input type="text" name="u_price"  id="up" oninput="validation()" class="form-control" placeholder="Enter Rate"> 
                                                        </div>
                                                    </div>
                                                </div>
@@ -301,6 +363,9 @@ a.btn:hover {
                                </div>
                            </div>
 						</div>
+						
+				
+						
 						<!-- CREATE MODAL ----------------------------------------------------------------------------------------------------------------------------->
 		<?php if (isset($_POST['done'])){
 			 $id = $_POST['pro_id'];
@@ -321,7 +386,7 @@ a.btn:hover {
                                <div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
                                        <div class="modal-header">
-                                           <h4 class="modal-title" id="largeModalLabel">Insert Mechinaries Information here :</h4>
+                                           <h4 class="modal-title" align="center" id="largeModalLabel">Edit Products here :</h4></hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" name="editable" onsubmit="return check_edit_info();" method ="POST" >
@@ -343,16 +408,17 @@ a.btn:hover {
 											
 											<div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-                                                    <label >Rate :</label>
+                                                    <label >Unit Price :</label>
                                                 </div>
                                                 <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" name="uprice" oninput="validation2()" id="unit_price" class="form-control" placeholder="Enter Product rate" >
+                                                            <input type="text" name="uprice" oninput="validation()" id="unit_price" class="form-control" placeholder="Enter Product rate" >
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div></br>
+											
 											
                                        
                                        <div class="modal-footer">

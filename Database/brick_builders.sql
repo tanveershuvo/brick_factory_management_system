@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2019 at 08:56 PM
+-- Generation Time: Nov 23, 2018 at 07:11 PM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.0.21
 
@@ -126,9 +126,8 @@ INSERT INTO `employee_payment` (`emp_pay_id`, `emp_id`, `date`, `salary`, `bonus
 (365392, '364274', '25/11/18', 12500, 0, 'paid'),
 (653593, '652575', '25/10/18', 12000, 0, 'unpaid'),
 (653693, '652575', '02/11/18', 12000, 0, 'paid'),
-(772514, '772195', '07/03/19', 12500, 0, 'unpaid'),
 (773213, '772195', '25/10/18', 12355, 0, 'paid'),
-(773313, '772195', '02/11/18', 12500, 0, 'paid'),
+(773313, '772195', '02/11/18', 12500, 0, 'unpaid'),
 (782386, '781268', '21/11/18', 12500, 0, 'unpaid');
 
 -- --------------------------------------------------------
@@ -242,7 +241,7 @@ CREATE TABLE `order_details` (
 --
 
 INSERT INTO `order_details` (`order_id`, `cus_id`, `pro_name`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`, `sea_id`, `inserted_by`) VALUES
-(162831, '33669', 'Quality 1', 10.00, 1000, 10000, 10000, '13/10/2018', 9, 'tanveershuvos@gmail.com'),
+(162831, '33669', 'Quality 1', 10.00, 1000, 10000, 8000, '13/10/2018', 9, 'tanveershuvos@gmail.com'),
 (195865, '33669', 'Quality 1', 11.00, 23, 253, 253, '12/11/2018', 9, 'tanveershuvos@gmail.com'),
 (222856, '927949', 'Quality 1', 10.00, 45, 400, 200, '13/10/2018', 9, 'tanveershuvos@gmail.com'),
 (226247, '33669', 'Quality 2', 5.00, 10, 50, 8, '21/11/2018', 9, 'Shanto'),
@@ -575,7 +574,7 @@ ALTER TABLE `product_details`
 -- AUTO_INCREMENT for table `season`
 --
 ALTER TABLE `season`
-  MODIFY `sea_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `sea_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `sordar_weekly_bill`
 --

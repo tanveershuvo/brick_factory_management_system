@@ -2,6 +2,8 @@
 unset ($_SESSION['nav']);
 $_SESSION['nav'] = 4 ;
 ?>
+
+
 <?php include "signin_checker.php"; ?>
 <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 <title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | Add Employee</title>
@@ -28,6 +30,96 @@ $_SESSION['nav'] = 4 ;
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 <script>	
+	
+	
+		window.onload=function dataRetrieval(){
+		   	 var tbody = document.getElementById("table");
+			  var tableRow="";
+			  
+			  $.ajax({
+				type:'POST',
+				url:"ajax_retrieve.php",
+				data:{"employee_details":1},
+				dataType:"json",
+				success : function(response){
+				     /*loop start*/
+					 for(var i=0;i<response.length ;i++){
+						
+					 tableRow += "<tr><td style=' text-align:center'; ><b>"+response[i].emp_name+"</b></td>"+
+					 "<td style=' text-align:center'; ><b>"+response[i].emp_email+"</b></td>"+
+					 "<td style=' text-align:center'; ><b>"+response[i].emp_phone+"</b></td>"+
+					 "<td style=' text-align:center'; ><b>"+response[i].emp_des+"</b></td>"+
+					 "<td style=' text-align:center'; ><b>"+response[i].emp_salary+"</b> tk</td>"+
+					 "<td style=' text-align:center'; ><b>"+response[i].emp_address+"</b></td>"+
+					 "<td style=' text-align:center';  ><a onclick='edit("+response[i].emp_id+")' class='btn btn-primary a-btn-slide-text' data-toggle='modal' data-target='#edit_modal'>"+
+					 "<span class='glyphicon glyphicon-plus'></span><span><strong>EDIT</strong></span></a></td>"+
+					 "<td style=' text-align:center';  ><a onclick='resign("+response[i].emp_id+")' class='btn btn-danger a-btn-slide-text'>"+
+					 "<span class='glyphicon glyphicon-minus'></span><span><strong>RESIGNED</strong></span></a></td>"+
+					 "</tr>";  
+					 /*loop end*/
+					 }		
+					tbody.innerHTML = tableRow;
+				}
+			
+			});
+			}
+			function resign(emp_id){
+			swal({
+                          title: "Are You Sure?",
+						  text: "This employee account will be deactivated and you will not be able to reassign this employee!",
+                          type: "warning",
+                          confirmButtonClass: "btn-danger",
+                          confirmButtonText: "Yes",
+						  closeOnConfirm: true,
+                        }, function() {
+                            $.ajax({
+			               	type:'POST',
+			               	url:"ajax_retrieve.php",
+			               	data:{resignID:emp_id},
+			               	dataType:"json",
+			               	success : function(response){
+							
+			      		 }
+						 
+                          });
+						  window.location.href ="http://localhost/bfms/employee_add.php";
+				
+			    });
+				
+			
+			
+			
+			}
+			function edit(emp_id){
+			  $.ajax({
+				type:'POST',
+				url:"ajax_retrieve.php",
+				data:{employeeID:emp_id},
+				dataType:"json",
+				success : function(response){
+					console.log(response)
+						document.getElementById('eName').value=response[0].emp_name;
+						document.getElementById('addres').value=response[0].emp_address;
+						document.getElementById('eEmail').value=response[0].emp_email;
+						document.getElementById('phone').value=response[0].emp_phone;
+						document.getElementById('eMonthly').value=response[0].emp_salary;
+						document.getElementById('eId').value=response[0].emp_id;
+					 }
+			});
+			}
+			
+				 function editAlert(){
+       			  swal({
+                          title: "Employee Profile Edited Succesfully",
+                          type: "success",
+                          confirmButtonClass: "btn-primary",
+                          confirmButtonText: "OK",
+						  closeOnConfirm: true,
+                        }, function() {
+                            // Redirect the user
+                            window.location.href = "http://localhost/bfms/employee_add";
+                          });			  
+		  }
 		function myFN(){
 		swal({
            title: "Duplicate Entry!!",
@@ -107,7 +199,15 @@ a.btn:hover {
 </style>
 </head>
 <?php include "template/mininavbar.php" ?> 
-<?php
+
+<section class="content">
+        <div class="container-fluid">
+            <div class="block-header">
+                 <h2>
+                   <b>EMPLOYEE DETAILS AND SALARY DETAILS</b>
+                 </h2>
+				 
+			<?php
 	include_once 'dbCon.php';
 	$conn= connect();
    if (isset($_POST['submit'])){
@@ -126,16 +226,21 @@ a.btn:hover {
 	   $emp_name 	= mysqli_real_escape_string($conn,$_POST['emp_name']);
 	   $email		= mysqli_real_escape_string($conn,$_POST['email']);
 	   $des 		= mysqli_real_escape_string($conn,$_POST['des']);
+	  
 	   $msalary		= mysqli_real_escape_string($conn,$_POST['msalary']);
 	   $mob		 	= mysqli_real_escape_string($conn,$_POST['mob']);
 	   $addrs 		= mysqli_real_escape_string($conn,$_POST['addrs']);
 	   $comID		=$_SESSION['com_id'];
+	   if ($des =='Manager'){
+	   $d = 2;
+	   
+	   }
 	   $sql = "SELECT * FROM employee_details   WHERE emp_email='$email' OR emp_name='$emp_name' ";
 	   $result = $conn->query($sql);
 	   if($result->num_rows < 1){
 			$sql	= "INSERT INTO employee_details (emp_id,emp_name,emp_email,emp_address,emp_phone,emp_des,emp_salary,com_id)
 					   VALUES ('$eID','$emp_name','$email','$addrs','$mob','$des','$msalary','$comID')";
-			$ssql	= "INSERT INTO login_details (log_id,email) VALUES('$eID','$email')";
+			$ssql	= "INSERT INTO login_details (log_id,email,access_level) VALUES('$eID','$email','$d')";
 			
 			if ($conn->query($sql) && $conn->query($ssql)){
 				echo "<script>success()</script>";
@@ -144,13 +249,11 @@ a.btn:hover {
 			echo "<script>myFN()</script>";
 	   }
    }  
-?>		
-<section class="content">
-        <div class="container-fluid">
-            <div class="block-header">
-                 <h2>
-                   <b>EMPLOYEE DETAILS AND SALARY DETAILS</b>
-                 </h2>
+?>			 
+				 
+				 
+				 
+				 
 				 <a name = "add" type="button" class="col-lg-offset-9 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW EMPLOYEE DETAILS </a>                    
             </div>	
 	
@@ -169,40 +272,22 @@ a.btn:hover {
 					</div>
                         <div class="body">	
                             <div class="table-responsive">
-                                <table  class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table  class="table table-bordered table-striped table-hover ">
                                     <thead>
                                         <tr>
                                             <th style='text-align:center;' >Employee Name</th>
-                                            <th style='text-align:center;' >Employee Phone</th>
                                             <th style='text-align:center;' >Employee email</th>
+                                            <th style='text-align:center;' >Employee Phone</th>
                                             <th style='text-align:center;' >Designation</th>
-                                            <th style='text-align:center;' >Address</th>
                                             <th style='text-align:center;' >Salary</th>
+                                            <th style='text-align:center;' >Address</th>
                                             <th style='text-align:center;' >Action</th>
+                                            <th style='text-align:center;' >Resigned</th>
                                         </tr>
                                     </thead>
                                  
                                     <tbody style="font-size:14px;color:black;" align="center" id="table">
-									<?php 
-										include_once 'dbCon.php';
-										$conn= connect();
-										$comID=$_SESSION['com_id'];
-										$sql= "SELECT * FROM employee_details where com_id='$comID' order by emp_name";
-										$resultData=$conn->query($sql);
-										   foreach ($resultData as $row){				
-									?>
-                                        <tr>
-                                            <td><?=$row['emp_name']?></td>
-                                            <td><?=$row['emp_phone']?></td>
-                                            <td><?=$row['emp_email']?></td>
-                                            <td><?=$row['emp_des']?></td>
-                                            <td><?=$row['emp_address']?></td>
-                                            <td><?=$row['emp_salary']?> tk</td>
-                                            <td><a  href = "#edit_modal<?=$row['emp_id']?>" class='btn btn-primary a-btn-slide-text' name = "edit" data-toggle='modal' >
-											<span class='glyphicon glyphicon-plus'></span><span><strong>EDIT</strong></span></a></td>
-											<?php include 'edit_employee.php'; ?>
-                                        </tr>
-									<?php } ?>
+									
                                     </tbody>
                                 </table>
                             </div>
@@ -249,10 +334,23 @@ a.btn:hover {
                                    <div class="modal-content">
                                        
 									   <div class="modal-header">
-                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert Employee Information Here </h4><hr>
+                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert 
+											   <?php if($_SESSION['access']==(2)){?>
+                                                            Staff
+														<?php } ?>
+														<?php if($_SESSION['access']==(1)){?>
+                                                            Manager
+														<?php } ?>
+														Information Here </h4><hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >
+										   <?php if($_SESSION['access']==(2)){?>
+												<input type="hidden" name="des"  id="des"  value="Staff" >
+											<?php } ?>
+											<?php if($_SESSION['access']==(1)){?>
+                                                <input type="hidden" name="des"  id="des"  value="Manager" >
+											<?php } ?>
 										   <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label >Employee Name :</label>
@@ -273,31 +371,14 @@ a.btn:hover {
                                                 <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
                                                     <div class="form-group">
                                                         <div class="form-line">
-                                                            <input type="text" name="email" id="email" class="form-control" value ="" placeholder="Enter Email " >
+                                                            <input type="text" name="email" id="email" oninput="validmail()" class="form-control" value ="" placeholder="Enter Email " >
                                                         </div>
 														<span id ="msg4" style="font-size:12px;color:red;font-weight:bold;"></span>
                                                     
                                                     </div>
                                                 </div>
                                             </div>  <br>
-                                            <div class="row clearfix">
-                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-                                                    <label for="password_2">Designation :</label>
-                                                </div>
-                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-														<?php if($_SESSION['access']==(2)){?>
-                                                            <input name="des"  id="des"  value="Staff" >
-														<?php } ?>
-														<?php if($_SESSION['access']==(1)){?>
-                                                            <input name="des"  id="des"  value="Manager" >
-														<?php } ?>
-                                                        </div>
-														<span id ="msg2" style="font-size:12px;color:red;font-weight:bold;"></span>
-                                                    </div>
-                                                </div>
-                                            </div> <br>
+                                   
 											<div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Monthly Salary :</label>
@@ -393,21 +474,207 @@ a.btn:hover {
 			
 			
 		}
+		function ValidateEmail(mail) 
+			{
+			
+		}
 		function validation(){
 			var salary= document.getElementById('msalary').value;
 			var mob= document.getElementById('mob').value;
 			
 			 if(isNaN(salary)){
-				swal('Salary contains only numbers!!', '', 'warning')
+				document.getElementById('msg3').innerHTML = "**Minus value not accepted";
 				document.getElementById('msalary').value='';
+				return false;					
+			} 
+			
+			else if(isNaN(mob)){
+				document.getElementById('msg').innerHTML = "**Mobile number contains only numbers!!";
+				document.getElementById('mob').value='';
+				return false;					
+			}	
+			
+		}
+			
+		function validmail(){
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById('email').value)){
+			document.getElementById('msg4').innerHTML = "";
+				return (true)
+			} else{
+			document.getElementById('msg4').innerHTML = "**You have entered an invalid email address!!!";
+			
+				return (false)	
+			}
+		}
+</script>
+<?php
+	include_once 'dbCon.php';
+	$conn= connect();
+	
+	if (isset($_POST['sbmt'])){
+	$eID =$_POST['eId'];
+	$emp_name 	= mysqli_real_escape_string($conn,$_POST['eName']);
+	$email		= mysqli_real_escape_string($conn,$_POST['eEmail']);
+	$msalary	= mysqli_real_escape_string($conn,$_POST['eMonthly']);
+	$mob	 	= mysqli_real_escape_string($conn,$_POST['phone']);
+	$addrs 		= mysqli_real_escape_string($conn,$_POST['addres']);
+	$sql = "Update employee_details SET emp_name='$emp_name',emp_email='$email',emp_address='$addrs',emp_phone='$mob',emp_salary='$msalary' WHERE emp_id='$eID' ";
+	$results=$conn->query($sql);
+	if($conn->query($sql)){
+		     echo '<script type="text/javascript"> editAlert(); </script>';
+			 
+			}else{
+					 echo "<script>window.location.href = 'http://localhost/bfms/500.php';</script>";
+			}
+	}
+	?>
+						<div class="body">
+                           <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document">
+                                   <div class="modal-content">
+									   <div class="modal-header">
+                                           <h4 class="modal-title" align="center" >Edit Employee Information Here </h4><hr>
+                                       </div>
+                                       <div class="modal-body">
+										 <form class="form-horizontal" id="insert_form" onsubmit="return check_in();" method ="POST" >
+										  <input type="hidden" name="eId" id="eId">
+										  <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                                    <label >Employee Name :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="eName" id="eName"  class="form-control"  >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div></br>
+											<div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
+                                                    <label for="password_2">Email:</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="eEmail" id="eEmail" oninput="valmail()" class="form-control"  >
+                                                        </div>
+														<span id ="msgmail" style="font-size:12px;color:red;font-weight:bold;"></span>
+                                                    
+                                                    </div>
+                                                </div>
+                                            </div> </br>
+											<div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+                                                    <label for="password_2">Monthly Salary :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="eMonthly" oninput="validate()"  id="eMonthly" class="form-control"  >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> </br>
+								            <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
+                                                    <label for="password_2">Phone No :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="phone" id="phone" oninput="validate()" class="form-control" >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> </br>
+											  <div class="row clearfix">
+                                                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
+                                                    <label for="password_2">Address :</label>
+                                                </div>
+                                                <div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+                                                    <div class="form-group">
+                                                        <div class="form-line">
+                                                            <input type="text" name="addres" id="addres" class="form-control"  >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                       </div></br>
+                                       <div class="modal-footer">
+                                           <button type="submit" name= "sbmt" id= "submit" class="btn btn-primary waves-effect"> SAVE</button>
+                                           <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">CLOSE</button>
+                                       </div>
+									  </form>
+                                   </div>
+                               </div>
+                           </div>
+					<script>		
+		function check_in(){
+			var name= document.getElementById('eName').value;
+			var des= document.getElementById('desig').value;
+			var salary= document.getElementById('eMonthly').value;
+			var email= document.getElementById('eEmail').value;
+			var mob= document.getElementById('phone').value;
+			var address = document.getElementById('addres').value;
+			
+			if (name==""){
+				swal('Please input customer name', '', 'warning')
+				return false;
+			}
+			
+			if (des==""){
+				swal('Please input designation ', '', 'warning')
+				return false;
+			}
+			if (salary==""){
+				swal('Please input salary', '', 'warning')
+				return false;
+			}
+			if (email==""){
+				swal('Please input employee email', '', 'warning')
+				return false;
+			}
+			if (mob==""){
+				swal('Please input mobile number', '', 'warning')
+				return false;
+			}
+			if (address==""){
+				swal('Please input address', '', 'warning')
+				return false;
+			}
+			if(mob.length != 11){
+				swal('Mobile Number Must be 11 digit!!', '', 'warning');
+				document.getElementById('phone').value='';
+				return false;					
+			}
+			
+			
+		}
+		function valmail(){
+			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById('eEmail').value)){
+			document.getElementById('msgmail').innerHTML = "";
+				return (true)
+			} else{
+			document.getElementById('msgmail').innerHTML = "**You have entered an invalid email address!!!";
+			
+				return (false)	
+			}
+		}
+		function validate(){
+			var salary= document.getElementById('eMonthly').value;
+			var mob= document.getElementById('phone').value;
+			
+			 if(isNaN(salary)){
+				swal('Salary contains only numbers!!', '', 'warning')
+				document.getElementById('eMonthly').value='';
 				return false;					
 			}
 			else if(isNaN(mob)){
 				swal('Mobile number conatins only letter!!', '', 'warning')
-				document.getElementById('mob').value='';
+				document.getElementById('phone').value='';
 				return false;					
 			}			
 		}
-</script>					
+</script>
 </body>
 </html>
