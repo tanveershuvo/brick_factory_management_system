@@ -27,7 +27,7 @@ $_SESSION['nav'] = 5 ; ?>
 
     <!-- Wait Me Css -->
     <link href="plugins/waitme/waitMe.css" rel="stylesheet" />
-	
+
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <!-- Bootstrap Select Css -->
@@ -36,9 +36,9 @@ $_SESSION['nav'] = 5 ; ?>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 	<script>
-	    
+
 		function mail(eid){
-		
+
 		$.ajax({
 				type:'POST',
 				data:{empp_id:eid},
@@ -47,13 +47,13 @@ $_SESSION['nav'] = 5 ; ?>
 					 window.location.href = "http://localhost/bfms/test";
 				}
 			});
-		
+
 		}
-		
-		
-		
+
+
+
 		function payment(id){
-			
+
 			$.ajax({
 				type:'POST',
 				data:{pay_id:id},
@@ -70,7 +70,7 @@ $_SESSION['nav'] = 5 ; ?>
 				}
 			});
 		}
-		
+
 			$(document).ready(function(){
           $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -79,8 +79,8 @@ $_SESSION['nav'] = 5 ; ?>
             });
           });
         });
-		
-		
+
+
     jQuery(function ($) {
         $("#excel").click(function () {
 		d = Date.now();
@@ -97,7 +97,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                         Address: { type: String },
                         Total_Due: { type: String },
                         Total_Order: { type: String }
-                       
+
                     }
                 }
             });
@@ -146,7 +146,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             type: String,
                                             value: "Total_Order"
                                         }
-                                     
+
                                     ]
                                 }
                             ].concat($.map(data, function(item) {
@@ -168,17 +168,17 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-	
+
 	jQuery(function ($) {
         $("#pdf").click(function () {
-			
+
 		d = Date.now();
 		d = new Date(d);
 		d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
 
-			
-			
+
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -202,13 +202,13 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                 });
 
                 pdf.addPage("a4", "portrait");
-				
+
                 pdf.table(
                     50,
                     50,
                     data,
-                    [	
-					
+                    [
+
                         { field: "Customer_Name", title: "Customer_Name", width: 100 },
                         { field: "Mobile", title: "Mobile", width: 85 },
                         { field: "Address", title: "Address Type", width: 150 },
@@ -228,12 +228,12 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
             });
         });
     });
-		
-		
-		
+
+
+
 	</script>
 </head>
-<?php include "template/mininavbar.php" ?> 
+<?php include "template/mininavbar.php" ?>
 <?php
 
 
@@ -243,17 +243,17 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 	$sql= "SELECT * FROM employee_details where com_id = '$comID' ";
     $resultData=$conn->query($sql);
 	foreach($resultData as $items){
-		
+
 		$id = $items['emp_id'];
 		$empid= (date("my"))+$id ;
 		$salary=$items['emp_salary'];
 		$today = date("d/m/y");
-		
-	$sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`payment_status`) 
-	values('$empid','$id','$today','$salary','unpaid')"; 
+
+	$sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`payment_status`)
+	values('$empid','$id','$today','$salary','unpaid')";
 	$conn->query($sql);
 	}
-	
+
 
 ?>
 
@@ -264,32 +264,32 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                 EMPLOYEE SALARY DETAILS
                  </h2>
             </div>
-			
+
 			<!-- Exportable Table -->
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
 					  <div class="header">
-						  <div class="row clearfix">                 
+						  <div class="row clearfix">
                             <div class="col-lg-4 ">
                                <div class="form-line">
-								
+
 								<input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
-									
+
                                </div>
-                            </div>	
+                            </div>
 							<div class="col-lg-4 ">
-							
+
 							</div>
 							<div class="col-lg-2 ">
 							<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-										
-							</div>	
+
+							</div>
 							<div class="col-lg-2 ">
 							<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-										
-							</div>								
-                         </div> 
+
+							</div>
+                         </div>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -305,27 +305,28 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                  
+
                                     <tbody>
-									<?php 
+									<?php
 												include_once 'dbCon.php';
 												$conn= connect();
 												$comID=$_SESSION['com_id'];
 												$access =$_SESSION['access'];
 												if ($access==1){
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p 
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'  
+												$sql= "SELECT * FROM employee_details as e , employee_payment as p
+												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'
 												and e.status=0 and payment_status='unpaid'
 												ORDER BY `emp_name` DESC";
+                        echo $sql;
 												} else{
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p 
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Staff' 
+												$sql= "SELECT * FROM employee_details as e , employee_payment as p
+												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Staff'
 												and e.status=0 and payment_status='unpaid'
 												ORDER BY `emp_name` DESC";
+                        echo $sql;
 												}
 												$resultData=$conn->query($sql);
 											    foreach ($resultData as $row){
-												
 										?>
                                         <tr>
 										<form method="post">
@@ -345,13 +346,13 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                         </tr>
 												<?php } ?>
                                     </tbody>
-									
+
 									<tbody id="ajaxtable">
-                                        
+
 										     </tbody>
                                 </table>
                             </div>
-							
+
                         </div>
                     </div>
                 </div>
@@ -373,7 +374,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
     <script src="js/admin.js"></script>
     <script src="js/pages/forms/basic-form-elements.js"></script>
 
-    
+
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
 
@@ -388,11 +389,11 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-	
+
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-	
-    
+
+
 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>

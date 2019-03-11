@@ -102,7 +102,7 @@
 			}
 
 		});
-		window.open("customer_reciept.php");
+		window.open("customer_reciept");
 
 
 	}
