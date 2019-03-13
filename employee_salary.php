@@ -1,8 +1,10 @@
 <?php include "template/miniheader.php";
-unset ($_SESSION['nav']);
+unset($_SESSION['nav']);
 $_SESSION['nav'] = 5 ; ?>
 <?php include "signin_checker.php"; ?>
-<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | EMP SALARY</title>
+<title><?php if (isset($_SESSION['com_name'])) {
+    echo $_SESSION['com_name'];
+};?> | EMP SALARY</title>
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -44,13 +46,11 @@ $_SESSION['nav'] = 5 ; ?>
 				data:{empp_id:eid},
 				url:"ajax_retrieve.php",
 				success : function(){
-					 window.location.href = "http://localhost/bfms/test";
+					 window.location.href = "employee_salary";
 				}
 			});
 
 		}
-
-
 
 		function payment(id){
 
@@ -65,7 +65,7 @@ $_SESSION['nav'] = 5 ; ?>
                           confirmButtonClass: "btn-primary",
                           confirmButtonText: "OK",
                         }, function() {
-                            window.location.href = "http://localhost/bfms/employee_salary.php";
+                            window.location.href = "employee_salary";
                           });
 				}
 			});
@@ -235,26 +235,20 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 </head>
 <?php include "template/mininavbar.php" ?>
 <?php
-
-
-	include_once 'dbCon.php';
+    include_once 'dbCon.php';
     $conn= connect();
-	$comID=$_SESSION['com_id'];
-	$sql= "SELECT * FROM employee_details where com_id = '$comID' ";
+    $comID=$_SESSION['com_id'];
+    $sql= "SELECT * FROM employee_details where com_id = '$comID' ";
     $resultData=$conn->query($sql);
-	foreach($resultData as $items){
-
-		$id = $items['emp_id'];
-		$empid= (date("my"))+$id ;
-		$salary=$items['emp_salary'];
-		$today = date("d/m/y");
-
-	$sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`payment_status`)
-	values('$empid','$id','$today','$salary','unpaid')";
-	$conn->query($sql);
-	}
-
-
+    foreach ($resultData as $items) {
+        $id = $items['emp_id'];
+        $empid= (date("my"))+$id ;
+        $salary=$items['emp_salary'];
+        $today = date("d/m/y");
+        $sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`status`)
+	      values('$empid','$id','$today','$salary','unpaid')";
+        $conn->query($sql);
+    }
 ?>
 
 <section class="content">
@@ -307,49 +301,35 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                     </thead>
 
                                     <tbody>
-									<?php
-												include_once 'dbCon.php';
-												$conn= connect();
-												$comID=$_SESSION['com_id'];
-												$access =$_SESSION['access'];
-												if ($access==1){
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'
-												and e.status=0 and payment_status='unpaid'
-												ORDER BY `emp_name` DESC";
-                        echo $sql;
-												} else{
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Staff'
-												and e.status=0 and payment_status='unpaid'
-												ORDER BY `emp_name` DESC";
-                        echo $sql;
-												}
-												$resultData=$conn->query($sql);
-											    foreach ($resultData as $row){
-										?>
+									                             <?php
+                                                include_once 'dbCon.php';
+                                                $conn= connect();
+                                                $comID=$_SESSION['com_id'];
+                                                $access =$_SESSION['access'];
+                                                $sql="SELECT * FROM employee_details as e , employee_payment as p
+                                                WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND e.status=0 AND p.payment_status='unpaid'
+                                                ORDER BY `emp_name` DESC";
+                                                $resultData=$conn->query($sql);
+                                              foreach ($resultData as $row) {
+                                                  ?>
                                         <tr>
-										<form method="post">
-											<input type="hidden" value="<?=$row['emp_pay_id']?>">
+										                  <form method="post">
+		                                       <input type="hidden" value="<?=$row['emp_pay_id']?>">
                                             <td><?=$row['emp_name']?></td>
                                             <td><?=$row['emp_phone']?></td>
                                             <td><?=$row['emp_email']?></td>
                                             <td><?=$row['emp_des']?></td>
                                             <td><?=$row['salary']?></td>
                                             <td><?=$row['date']?></td>
-											<?php if ($row['payment_status']=='unpaid'){ ?>
-											<td><a name="edit" onclick="payment(<?=$row['emp_pay_id']?>),mail(<?=$row['emp_id']?>)"  class="btn btn-primary waves-effect waves-float">Pay Now</a></td>
-											<?php } else { ?>
-											<td><b class="text-primary">Salary Paid</b></td>
-											<?php } ?>
+											<td><a name="edit" onclick="payment(<?=$row['emp_pay_id']?>)"  class="btn btn-primary waves-effect waves-float">Pay Now</a></td>
+
 										</form>
                                         </tr>
-												<?php } ?>
-                                    </tbody>
-
-									<tbody id="ajaxtable">
-
-										     </tbody>
+												                  <?php
+                                              } ?>
+                                            </tbody>
+                                            <tbody id="ajaxtable">
+                                            </tbody>
                                 </table>
                             </div>
 

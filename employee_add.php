@@ -1,12 +1,14 @@
-<?php include "template/miniheader.php"; 
-unset ($_SESSION['nav']);
+<?php include "template/miniheader.php";
+unset($_SESSION['nav']);
 $_SESSION['nav'] = 4 ;
 ?>
 
 
 <?php include "signin_checker.php"; ?>
 <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
-<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | Add Employee</title>
+<title><?php if (isset($_SESSION['com_name'])) {
+    echo $_SESSION['com_name'];
+};?> | Add Employee</title>
 <!-- Waves Effect Css -->
 <link href="plugins/node-waves/waves.css" rel="stylesheet" />
 <!-- Animation Css -->
@@ -29,13 +31,13 @@ $_SESSION['nav'] = 4 ;
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
-<script>	
-	
-	
+<script>
+
+
 		window.onload=function dataRetrieval(){
 		   	 var tbody = document.getElementById("table");
 			  var tableRow="";
-			  
+
 			  $.ajax({
 				type:'POST',
 				url:"ajax_retrieve.php",
@@ -44,7 +46,7 @@ $_SESSION['nav'] = 4 ;
 				success : function(response){
 				     /*loop start*/
 					 for(var i=0;i<response.length ;i++){
-						
+
 					 tableRow += "<tr><td style=' text-align:center'; ><b>"+response[i].emp_name+"</b></td>"+
 					 "<td style=' text-align:center'; ><b>"+response[i].emp_email+"</b></td>"+
 					 "<td style=' text-align:center'; ><b>"+response[i].emp_phone+"</b></td>"+
@@ -55,22 +57,22 @@ $_SESSION['nav'] = 4 ;
 					 "<span class='glyphicon glyphicon-plus'></span><span><strong>EDIT</strong></span></a></td>"+
 					 "<td style=' text-align:center';  ><a onclick='resign("+response[i].emp_id+")' class='btn btn-danger a-btn-slide-text'>"+
 					 "<span class='glyphicon glyphicon-minus'></span><span><strong>RESIGNED</strong></span></a></td>"+
-					 "</tr>";  
+					 "</tr>";
 					 /*loop end*/
-					 }		
+					 }
 					tbody.innerHTML = tableRow;
 				}
-			
+
 			});
 			}
 			function resign(emp_id){
 			swal({
                           title: "Are You Sure?",
-						  text: "This employee account will be deactivated and you will not be able to reassign this employee!",
+						  						text: "This employee account will be deactivated and you will not be able to reassign this employee!",
                           type: "warning",
                           confirmButtonClass: "btn-danger",
                           confirmButtonText: "Yes",
-						  closeOnConfirm: true,
+						  						closeOnConfirm: true,
                         }, function() {
                             $.ajax({
 			               	type:'POST',
@@ -78,17 +80,17 @@ $_SESSION['nav'] = 4 ;
 			               	data:{resignID:emp_id},
 			               	dataType:"json",
 			               	success : function(response){
-							
+
 			      		 }
-						 
+
                           });
-						  window.location.href ="http://localhost/bfms/employee_add.php";
-				
+						  window.location.href ="employee_add";
+
 			    });
-				
-			
-			
-			
+
+
+
+
 			}
 			function edit(emp_id){
 			  $.ajax({
@@ -107,7 +109,7 @@ $_SESSION['nav'] = 4 ;
 					 }
 			});
 			}
-			
+
 				 function editAlert(){
        			  swal({
                           title: "Employee Profile Edited Succesfully",
@@ -117,8 +119,8 @@ $_SESSION['nav'] = 4 ;
 						  closeOnConfirm: true,
                         }, function() {
                             // Redirect the user
-                            window.location.href = "http://localhost/bfms/employee_add";
-                          });			  
+                            window.location.href = "employee_add";
+                          });
 		  }
 		function myFN(){
 		swal({
@@ -129,10 +131,10 @@ $_SESSION['nav'] = 4 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/employee_details.php";
+           window.location.href= "employee_details.php";
          });
 		}
-		<!---- ----->
+
 		$(document).ready(function(){
               $("#myInput").on("keyup", function() {
                 var value = $(this).val().toLowerCase();
@@ -151,7 +153,7 @@ $_SESSION['nav'] = 4 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/employee_add.php";
+           window.location.href= "employee_add";
          });
 		}
 		<!-------->
@@ -164,7 +166,7 @@ $_SESSION['nav'] = 4 ;
            confirmButtonText: "OK!"
          },
          function(){
-           window.location.href= "http://localhost/bfms/employee_add.php";
+           window.location.href= "employee_add";
          });
 		}
 		<!------------>
@@ -176,7 +178,7 @@ $_SESSION['nav'] = 4 ;
 				dataType:"json",
 				success : function(response){
 					 }
-					
+
 			});
 			event.target.id == "edit_modal";
 		}
@@ -198,7 +200,48 @@ a.btn:hover {
 
 </style>
 </head>
-<?php include "template/mininavbar.php" ?> 
+<?php include "template/mininavbar.php";
+include_once 'dbCon.php';
+$conn= connect();
+if (isset($_POST['submit'])) {
+    function generateRandomString()
+    {
+        $characters = '123456789987654321';
+        $length = 6;
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
+    $eID 		= generateRandomString();
+    $emp_name 	= mysqli_real_escape_string($conn, $_POST['emp_name']);
+    $email		= mysqli_real_escape_string($conn, $_POST['email']);
+    $des 		= mysqli_real_escape_string($conn, $_POST['des']);
+    $msalary		= mysqli_real_escape_string($conn, $_POST['msalary']);
+    $mob		 	= mysqli_real_escape_string($conn, $_POST['mob']);
+    $addrs 		= mysqli_real_escape_string($conn, $_POST['addrs']);
+    $comID		=$_SESSION['com_id'];
+    if ($des =='Manager') {
+        $d = 2;
+    }
+    $sql = "SELECT * FROM employee_details   WHERE emp_email='$email' OR emp_name='$emp_name' ";
+    $result = $conn->query($sql);
+    if ($result->num_rows < 1) {
+        $sql	= "INSERT INTO employee_details (emp_id,emp_name,emp_email,emp_address,emp_phone,emp_des,emp_salary,com_id)
+			 VALUES ('$eID','$emp_name','$email','$addrs','$mob','$des','$msalary','$comID')";
+        $ssql	= "INSERT INTO login_details (log_id,email,access_level) VALUES('$eID','$email','$d')";
+
+        if ($conn->query($sql) && $conn->query($ssql)) {
+            echo "<script>success()</script>";
+        }
+    } else {
+        echo "<script>myFN()</script>";
+    }
+}
+?>
 
 <section class="content">
         <div class="container-fluid">
@@ -206,71 +249,23 @@ a.btn:hover {
                  <h2>
                    <b>EMPLOYEE DETAILS AND SALARY DETAILS</b>
                  </h2>
-				 
-			<?php
-	include_once 'dbCon.php';
-	$conn= connect();
-   if (isset($_POST['submit'])){
-	   function generateRandomString()  {
-			$characters = '123456789987654321';
-			$length = 6;
-			$charactersLength = strlen($characters);
-			$randomString = '';
-			for ($i = 0; $i < $length; $i++) {
-				$randomString .= $characters[rand(0, $charactersLength - 1)];
-			}
-			return $randomString;
-       }
-	
-	   $eID 		= generateRandomString();
-	   $emp_name 	= mysqli_real_escape_string($conn,$_POST['emp_name']);
-	   $email		= mysqli_real_escape_string($conn,$_POST['email']);
-	   $des 		= mysqli_real_escape_string($conn,$_POST['des']);
-	  
-	   $msalary		= mysqli_real_escape_string($conn,$_POST['msalary']);
-	   $mob		 	= mysqli_real_escape_string($conn,$_POST['mob']);
-	   $addrs 		= mysqli_real_escape_string($conn,$_POST['addrs']);
-	   $comID		=$_SESSION['com_id'];
-	   if ($des =='Manager'){
-	   $d = 2;
-	   
-	   }
-	   $sql = "SELECT * FROM employee_details   WHERE emp_email='$email' OR emp_name='$emp_name' ";
-	   $result = $conn->query($sql);
-	   if($result->num_rows < 1){
-			$sql	= "INSERT INTO employee_details (emp_id,emp_name,emp_email,emp_address,emp_phone,emp_des,emp_salary,com_id)
-					   VALUES ('$eID','$emp_name','$email','$addrs','$mob','$des','$msalary','$comID')";
-			$ssql	= "INSERT INTO login_details (log_id,email,access_level) VALUES('$eID','$email','$d')";
-			
-			if ($conn->query($sql) && $conn->query($ssql)){
-				echo "<script>success()</script>";
-			}
-	   } else {	
-			echo "<script>myFN()</script>";
-	   }
-   }  
-?>			 
-				 
-				 
-				 
-				 
-				 <a name = "add" type="button" class="col-lg-offset-9 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW EMPLOYEE DETAILS </a>                    
-            </div>	
-	
+				 <a name = "add" type="button" class="col-lg-offset-9 col-md-offset-4 col-sm-offset-4 col-xs-offset-4 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW EMPLOYEE DETAILS </a>
+            </div>
+
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="header">
-						 
-                               <div class="row clearfix">                 
+
+                               <div class="row clearfix">
                             <div class="col-lg-4 ">
                                <div class="form-line">
                                   <input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
                                </div>
-                            </div>				
-                        </div> 
+                            </div>
+                        </div>
 					</div>
-                        <div class="body">	
+                        <div class="body">
                             <div class="table-responsive">
                                 <table  class="table table-bordered table-striped table-hover ">
                                     <thead>
@@ -285,13 +280,13 @@ a.btn:hover {
                                             <th style='text-align:center;' >Resigned</th>
                                         </tr>
                                     </thead>
-                                 
+
                                     <tbody style="font-size:14px;color:black;" align="center" id="table">
-									
+
                                     </tbody>
                                 </table>
                             </div>
-							
+
                         </div>
                     </div>
                 </div>
@@ -307,7 +302,7 @@ a.btn:hover {
     <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
     <!-- Custom Js -->
-    
+
     <script src="js/pages/forms/basic-form-elements.js"></script>
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
@@ -326,31 +321,39 @@ a.btn:hover {
     <script src="js/pages/tables/jquery-datatable.js"></script>
     <!-- Demo Js -->
     <script src="js/demo.js"></script>
-	
+
 	<!------- MODAL------------->
 						<div class="body">
                            <div class="modal fade" id="largeModal" tabindex="-1" role="dialog">
                                <div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
-                                       
+
 									   <div class="modal-header">
-                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert 
-											   <?php if($_SESSION['access']==(2)){?>
+                                           <h4 class="modal-title" align="center" id="largeModalLabel">Insert
+											   <?php if ($_SESSION['access']==(2)) {
+    ?>
                                                             Staff
-														<?php } ?>
-														<?php if($_SESSION['access']==(1)){?>
+														<?php
+} ?>
+														<?php if ($_SESSION['access']==(1)) {
+        ?>
                                                             Manager
-														<?php } ?>
+														<?php
+    } ?>
 														Information Here </h4><hr>
                                        </div>
                                        <div class="modal-body">
 										 <form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >
-										   <?php if($_SESSION['access']==(2)){?>
+										   <?php if ($_SESSION['access']==(2)) {
+        ?>
 												<input type="hidden" name="des"  id="des"  value="Staff" >
-											<?php } ?>
-											<?php if($_SESSION['access']==(1)){?>
+											<?php
+    } ?>
+											<?php if ($_SESSION['access']==(1)) {
+        ?>
                                                 <input type="hidden" name="des"  id="des"  value="Manager" >
-											<?php } ?>
+											<?php
+    } ?>
 										   <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label >Employee Name :</label>
@@ -374,11 +377,11 @@ a.btn:hover {
                                                             <input type="text" name="email" id="email" oninput="validmail()" class="form-control" value ="" placeholder="Enter Email " >
                                                         </div>
 														<span id ="msg4" style="font-size:12px;color:red;font-weight:bold;"></span>
-                                                    
+
                                                     </div>
                                                 </div>
                                             </div>  <br>
-                                   
+
 											<div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
                                                     <label for="password_2">Monthly Salary :</label>
@@ -404,7 +407,7 @@ a.btn:hover {
 														 <span id ="msg5" style="font-size:12px;color:red;font-weight:bold;"></span>
                                                     </div>
                                                 </div>
-                                            </div> 	 <br>	
+                                            </div> 	 <br>
 											  <div class="row clearfix">
                                                 <div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
                                                     <label for="password_2">Address :</label>
@@ -428,10 +431,10 @@ a.btn:hover {
                                </div>
                            </div>
 						</div>
-						
+
 <!---END MODAL-------------------->
 
-<script>		
+<script>
 		function check_info(){
 			var name= document.getElementById('emp_name').value;
 			var des= document.getElementById('des').value;
@@ -439,7 +442,7 @@ a.btn:hover {
 			var email= document.getElementById('email').value;
 			var mob= document.getElementById('mob').value;
 			var address = document.getElementById('addrs').value;
-			
+
 			if (name==""){
 				document.getElementById('msg1').innerHTML = "**Please input Employee name";
 				return false;
@@ -456,8 +459,8 @@ a.btn:hover {
 				document.getElementById('msg3').innerHTML = "**Please input salary";
 				return false;
 			}
-			
-			
+
+
 			if (mob==""){
 				document.getElementById('msg5').innerHTML = "**Please Input Mobile Number";
 				return false;
@@ -469,65 +472,64 @@ a.btn:hover {
 			if(mob.length != 11){
 				document.getElementById('msg').innerHTML = "**Mobile Number Must be 11 digit!!";
 				document.getElementById('mob').value='';
-				return false;					
+				return false;
 			}
-			
-			
+
+
 		}
-		function ValidateEmail(mail) 
+		function ValidateEmail(mail)
 			{
-			
+
 		}
 		function validation(){
 			var salary= document.getElementById('msalary').value;
 			var mob= document.getElementById('mob').value;
-			
+
 			 if(isNaN(salary)){
 				document.getElementById('msg3').innerHTML = "**Minus value not accepted";
 				document.getElementById('msalary').value='';
-				return false;					
-			} 
-			
+				return false;
+			}
+
 			else if(isNaN(mob)){
 				document.getElementById('msg').innerHTML = "**Mobile number contains only numbers!!";
 				document.getElementById('mob').value='';
-				return false;					
-			}	
-			
+				return false;
+			}
+
 		}
-			
+
 		function validmail(){
 			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById('email').value)){
 			document.getElementById('msg4').innerHTML = "";
 				return (true)
 			} else{
 			document.getElementById('msg4').innerHTML = "**You have entered an invalid email address!!!";
-			
-				return (false)	
+
+				return (false)
 			}
 		}
 </script>
 <?php
-	include_once 'dbCon.php';
-	$conn= connect();
-	
-	if (isset($_POST['sbmt'])){
-	$eID =$_POST['eId'];
-	$emp_name 	= mysqli_real_escape_string($conn,$_POST['eName']);
-	$email		= mysqli_real_escape_string($conn,$_POST['eEmail']);
-	$msalary	= mysqli_real_escape_string($conn,$_POST['eMonthly']);
-	$mob	 	= mysqli_real_escape_string($conn,$_POST['phone']);
-	$addrs 		= mysqli_real_escape_string($conn,$_POST['addres']);
-	$sql = "Update employee_details SET emp_name='$emp_name',emp_email='$email',emp_address='$addrs',emp_phone='$mob',emp_salary='$msalary' WHERE emp_id='$eID' ";
-	$results=$conn->query($sql);
-	if($conn->query($sql)){
-		     echo '<script type="text/javascript"> editAlert(); </script>';
-			 
-			}else{
-					 echo "<script>window.location.href = 'http://localhost/bfms/500.php';</script>";
-			}
-	}
-	?>
+    include_once 'dbCon.php';
+    $conn= connect();
+
+    if (isset($_POST['sbmt'])) {
+        $eID =$_POST['eId'];
+        $emp_name 	= mysqli_real_escape_string($conn, $_POST['eName']);
+        $email		= mysqli_real_escape_string($conn, $_POST['eEmail']);
+        $msalary	= mysqli_real_escape_string($conn, $_POST['eMonthly']);
+        $mob	 	= mysqli_real_escape_string($conn, $_POST['phone']);
+        $addrs 		= mysqli_real_escape_string($conn, $_POST['addres']);
+        $sql = "Update employee_details SET emp_name='$emp_name',emp_email='$email',emp_address='$addrs',emp_phone='$mob',emp_salary='$msalary' WHERE emp_id='$eID' ";
+        $results=$conn->query($sql);
+        if ($conn->query($sql)) {
+            echo '<script type="text/javascript"> editAlert(); </script>';
+        } else {
+            echo "<script>window.location.href = 'http://localhost/bfms/500.php';</script>";
+        }
+    }
+    ?>
 						<div class="body">
                            <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog"><div class="modal-dialog modal-lg" role="document">
                                    <div class="modal-content">
@@ -559,7 +561,7 @@ a.btn:hover {
                                                             <input type="text" name="eEmail" id="eEmail" oninput="valmail()" class="form-control"  >
                                                         </div>
 														<span id ="msgmail" style="font-size:12px;color:red;font-weight:bold;"></span>
-                                                    
+
                                                     </div>
                                                 </div>
                                             </div> </br>
@@ -608,7 +610,7 @@ a.btn:hover {
                                    </div>
                                </div>
                            </div>
-					<script>		
+					<script>
 		function check_in(){
 			var name= document.getElementById('eName').value;
 			var des= document.getElementById('desig').value;
@@ -616,12 +618,12 @@ a.btn:hover {
 			var email= document.getElementById('eEmail').value;
 			var mob= document.getElementById('phone').value;
 			var address = document.getElementById('addres').value;
-			
+
 			if (name==""){
 				swal('Please input customer name', '', 'warning')
 				return false;
 			}
-			
+
 			if (des==""){
 				swal('Please input designation ', '', 'warning')
 				return false;
@@ -645,10 +647,10 @@ a.btn:hover {
 			if(mob.length != 11){
 				swal('Mobile Number Must be 11 digit!!', '', 'warning');
 				document.getElementById('phone').value='';
-				return false;					
+				return false;
 			}
-			
-			
+
+
 		}
 		function valmail(){
 			if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(document.getElementById('eEmail').value)){
@@ -656,24 +658,24 @@ a.btn:hover {
 				return (true)
 			} else{
 			document.getElementById('msgmail').innerHTML = "**You have entered an invalid email address!!!";
-			
-				return (false)	
+
+				return (false)
 			}
 		}
 		function validate(){
 			var salary= document.getElementById('eMonthly').value;
 			var mob= document.getElementById('phone').value;
-			
+
 			 if(isNaN(salary)){
 				swal('Salary contains only numbers!!', '', 'warning')
 				document.getElementById('eMonthly').value='';
-				return false;					
+				return false;
 			}
 			else if(isNaN(mob)){
 				swal('Mobile number conatins only letter!!', '', 'warning')
 				document.getElementById('phone').value='';
-				return false;					
-			}			
+				return false;
+			}
 		}
 </script>
 </body>

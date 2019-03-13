@@ -1,14 +1,14 @@
 <?php
 
 	session_start();
-	
+
 	include_once 'dbCon.php';
 	$conn= connect();
-	
+
 	if(isset($_POST['display'])){
 	$cusid= $_SESSION['customer_id'];
 	$sql = "SELECT * , (SUM(total_price)-SUM(paid)) as 'Total_Due' FROM
-           	order_details as o , customer_details as c 
+           	order_details as o , customer_details as c
 	        WHERE o.cus_id=c.cus_id AND o.cus_id = '$cusid'";
 
 	$result = $conn->query($sql);
@@ -17,7 +17,7 @@
 		$array[] = [
 		   'Total_Due'=>$row['Total_Due'],
 		   'cus_name'=>$row['cus_name'],
-		
+
 		];
 	};
 	//print_r ($array);
@@ -26,7 +26,7 @@
 	if(isset($_POST['sordar_total_due'])){
 	$sorid= $_SESSION['sordar_id'];
 	$sql = "SELECT * , (SUM(bill)-SUM(advance)) as 'Total_Due' FROM
-           	sordar_payment as sp , sordar_details as sd 
+           	sordar_payment as sp , sordar_details as sd
 	        WHERE sp.sor_id=sd.sor_id AND sp.sor_id = '$sorid'";
 
 	$result = $conn->query($sql);
@@ -40,7 +40,7 @@
 	};
 	echo json_encode($array);
 	}
-	
+
 	if(isset($_POST['total'])){
 	$cusid= $_SESSION['customer_id'];
 	$sql="SELECT *,sea_name FROM order_details as o , customer_details as c , season as s
@@ -64,9 +64,9 @@
 	//print_r ($array);
 	echo json_encode($array);
 	}
-	
-	
-	
+
+
+
 	if(isset($_POST['sordar_name_check'])){
 	$sql = "SELECT * from sordar_details ";
 
@@ -80,7 +80,7 @@
 	};
 	echo json_encode($array);
 	}
-	
+
 		if(isset($_POST['emp_salary'])){
 	$sql = "SELECT * FROM employee_details as e , employee_payment as p WHERE e.emp_id=p.emp_id ";
 
@@ -99,8 +99,8 @@
 	};
 	echo json_encode($array);
 	}
-	
-	
+
+
 	if(isset($_POST['empID'])){
 	$id= $_POST['empID'];
 	$sql = "SELECT * FROM employee_details as e , employee_payment as p WHERE e.emp_id=p.emp_id AND e.emp_id='$id' ";
@@ -124,9 +124,9 @@
 			$comID=$_SESSION['com_id'];
 			$access =$_SESSION['access'];
 	if ($access==1){
-	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Manager' and status=0  ORDER BY emp_name ASC ";
+	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Manager'  ORDER BY emp_name ASC ";
 	} else {
-	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Staff' and status=0  ORDER BY emp_name ASC ";
+	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Staff' ORDER BY emp_name ASC ";
 	}
 	$result = $conn->query($sql);
 	$array;
@@ -143,7 +143,7 @@
 	};
 	echo json_encode($array, JSON_NUMERIC_CHECK);
 	}
-	
+
 		if(isset($_POST['product_details'])){
 			$comID=$_SESSION['com_id'];
 	$sql = "SELECT * FROM product_details where com_id='$comID' ORDER BY pro_name ASC ";
@@ -160,12 +160,12 @@
 	};
 	echo json_encode($array, JSON_NUMERIC_CHECK);
 	}
-	
-	
+
+
 	if(isset($_POST['av'])){
-		
+
 		$pName = $_POST['av'];
-			
+
 	$sql = "SELECT * FROM product_details WHERE pro_name='$pName' ";
 
 	$result = $conn->query($sql);
@@ -180,9 +180,9 @@
 	};
 	echo json_encode($array);
 	}
-	
-	
-	if(isset($_POST['mechinaries'])){		
+
+
+	if(isset($_POST['mechinaries'])){
 	$comID=$_SESSION['com_id'];
 	$sql = "SELECT * FROM mechinaries_details where com_id='$comID' ";
 
@@ -201,8 +201,8 @@
 	};
 	echo json_encode($array);
 	}
-	
-		if(isset($_POST['mID'])){	
+
+		if(isset($_POST['mID'])){
 		$id = $_POST['mID'];
 	$sql = "SELECT * FROM mechinaries_details where m_id='$id' ";
 
@@ -219,47 +219,47 @@
 		   'date'=>$row['date'],
 		];
 	};
-	
+
 	echo json_encode($array);
 	}
-	
-	if(isset($_POST['c_ID'])){	
-	
+
+	if(isset($_POST['c_ID'])){
+
 	$_SESSION['com_id']=$_POST['c_ID'];
 	$_SESSION['com_name']=$_POST['com_name'];
 	$_SESSION['image']=$_POST['image'];
 	}
-	if(isset($_POST['empp_id'])){	
-	
+	if(isset($_POST['empp_id'])){
+
 	$_SESSION['mailID']=$_POST['empp_id'];
 	}
-	if(isset($_POST['s_ID'])){	
-	
+	if(isset($_POST['s_ID'])){
+
 	$_SESSION['sea_id']=$_POST['s_ID'];
 	$_SESSION['sea_name']=$_POST['s_name'];
 	}
-	if(isset($_POST['eID'])){	
-	
+	if(isset($_POST['eID'])){
+
 	$_SESSION['eID']=$_POST['eID'];
 	}
 	if(isset($_POST['sorID'])){
 	$_SESSION['sordar_id']=$_POST['sorID'];
 	}
-	
-	if(isset($_POST['cusID'])){	
-	
+
+	if(isset($_POST['cusID'])){
+
 	$_SESSION['cusID']=$_POST['cusID'];
 	}
-	if(isset($_POST['oID'])){	
-	
+	if(isset($_POST['oID'])){
+
 	$_SESSION['oID']=$_POST['oID'];
 	}
-	
-	if(isset($_POST['pID'])){	
-	
+
+	if(isset($_POST['pID'])){
+
 	$_SESSION['pID']=$_POST['pID'];
 	}
-	if(isset($_POST['productID'])){	
+	if(isset($_POST['productID'])){
 		$id = $_POST['productID'];
 	$sql = "SELECT * FROM product_details where pro_id='$id' ";
 	$result = $conn->query($sql);
@@ -273,16 +273,16 @@
 	};
 	echo json_encode($array);
 	}
-	if(isset($_POST['resignID'])){	
+	if(isset($_POST['resignID'])){
 		$id = $_POST['resignID'];
 	$sql = "Update employee_details SET status=1 where emp_id='$id' ";
 	$result = $conn->query($sql);
 	$array;
-	
+
 	echo json_encode($array);
 	}
-	
-	if(isset($_POST['employeeID'])){	
+
+	if(isset($_POST['employeeID'])){
 		$id = $_POST['employeeID'];
 	$sql = "SELECT * FROM employee_details where emp_id='$id' ";
 	$result = $conn->query($sql);
@@ -300,8 +300,8 @@
 	};
 	echo json_encode($array);
 	}
-	
-	if(isset($_POST['pie'])){	
+
+	if(isset($_POST['pie'])){
 	$sql = "SELECT `pro_name`, COUNT(`order_id`)as 't' FROM order_details GROUP BY pro_name";
 	$result = $conn->query($sql);
 	$array;
@@ -310,12 +310,12 @@
 		   'pro_name'=>$row['pro_name'],
 		   'a'=>$row['t'],
 		];
-	
+
 	};
 	echo json_encode($array);
 	}
-	
-	
+
+
 	if(isset($_POST['weekly_bill'])){
 	$sorid= $_SESSION['sordar_id'];
 	$sID=$_SESSION['sea_id'];
@@ -332,7 +332,7 @@
 	};
 	//print_r ($array);
 	echo json_encode($array);
-	
+
 	}
 	if(isset($_POST['weeklytotal'])){
 	$sorid= $_SESSION['sordar_id'];
@@ -347,12 +347,12 @@
 	};
 	echo json_encode($array);
 	}
-	
+
 	if(isset($_POST['balance'])){
 	$sorid= $_SESSION['sordar_id'];
 	$sID=$_SESSION['sea_id'];
 	$sql="SELECT IFNULL(advance,0) as 'total'
-	FROM sordar_payment as sp WHERE  
+	FROM sordar_payment as sp WHERE
   sp.sor_id='$sorid' AND sp.sea_id='$sID' ";
 	$result = $conn->query($sql);
 	$array;
@@ -363,9 +363,9 @@
 	};
 	//print_r ($array);
 	echo json_encode($array);
-	
+
 	}
-	
+
 	if(isset($_POST['delivery'])){
 	$sorid= $_SESSION['sordar_id'];
 	$sID=$_SESSION['sea_id'];
@@ -379,5 +379,5 @@
 	};
 	echo json_encode($array);
 	}
-	
+
 ?>

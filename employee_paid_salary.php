@@ -1,8 +1,10 @@
 <?php include "template/miniheader.php";
-unset ($_SESSION['nav']);
+unset($_SESSION['nav']);
 $_SESSION['nav'] = 55 ; ?>
 <?php include "signin_checker.php"; ?>
-<title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | Emp Paid</title>
+<title><?php if (isset($_SESSION['com_name'])) {
+    echo $_SESSION['com_name'];
+};?> | Emp Paid</title>
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -37,9 +39,9 @@ $_SESSION['nav'] = 55 ; ?>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
-	
+
 	<script>
-	
+
 	$(document).ready(function(){
           $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -48,11 +50,11 @@ $_SESSION['nav'] = 55 ; ?>
             });
           });
         });
-		
-		
+
+
     jQuery(function ($) {
         $("#excel").click(function () {
-		
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -66,7 +68,7 @@ $_SESSION['nav'] = 55 ; ?>
                         Salary: { type: String },
                         Date: { type: String },
                         Status: { type: String }
-                       
+
                     }
                 }
             });
@@ -129,9 +131,9 @@ $_SESSION['nav'] = 55 ; ?>
                                             type: String,
                                             value: "Status"
                                         }
-                                     
+
                                     ]
-                                } 
+                                }
                             ].concat($.map(data, function(item) {
                                 return {
                                     cells: [
@@ -153,14 +155,14 @@ $_SESSION['nav'] = 55 ; ?>
             });
         });
     });
-	
+
 	jQuery(function ($) {
         $("#pdf").click(function () {
-			
+
 		d = Date.now();
 		d = new Date(d);
 		d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
-			
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -186,13 +188,13 @@ $_SESSION['nav'] = 55 ; ?>
                 });
 
                 pdf.addPage("a4", "portrait");
-				
+
                 pdf.table(
                     50,
                     50,
                     data,
-                    [	
-					
+                    [
+
                         { field: "EmployeeName", title: "EmployeeName", width: 70 },
                         { field: "Mobile", title: "Mobile", width: 70 },
                         { field: "Gmail", title: "Gmail", width: 70 },
@@ -214,12 +216,12 @@ $_SESSION['nav'] = 55 ; ?>
             });
         });
     });
-		
-	
+
+
 	</script>
-	
+
 	</head>
-<?php include "template/mininavbar.php" ?> 
+<?php include "template/mininavbar.php" ?>
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -227,32 +229,32 @@ $_SESSION['nav'] = 55 ; ?>
                                 EMPLOYEE SALARY DETAILS
                  </h2>
             </div>
-			
+
 			<!-- Exportable Table -->
             <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
 					  <div class="header">
-						  <div class="row clearfix">                 
+						  <div class="row clearfix">
                             <div class="col-lg-4 ">
                                <div class="form-line">
-								
+
 								<input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
-									
+
                                </div>
-                            </div>	
+                            </div>
 							<div class="col-lg-4 ">
-							
+
 							</div>
 							<div class="col-lg-2 ">
 							<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-										
-							</div>	
+
+							</div>
 							<div class="col-lg-2 ">
 							<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-										
-							</div>								
-                         </div> 
+
+							</div>
+                         </div>
                         </div>
                         <div class="body">
                             <div class="table-responsive">
@@ -268,28 +270,20 @@ $_SESSION['nav'] = 55 ; ?>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
-                                  
+
                                     <tbody id = "ajaxtable">
-									<?php 
-												include_once 'dbCon.php';
-												$conn= connect();
-												$comID=$_SESSION['com_id'];
-												$access =$_SESSION['access'];
-												if ($access==1){
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p 
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'  
-												and e.status=0 and payment_status='paid'
-												ORDER BY `emp_name` DESC";
-												} else{
-												$sql= "SELECT * FROM employee_details as e , employee_payment as p 
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Staff' 
-												and e.status=0 and payment_status='paid'
-												ORDER BY `emp_name` DESC";
-												}
-												$resultData=$conn->query($sql);
-											    foreach ($resultData as $row){
-												
-										?>
+									<?php
+                                                include_once 'dbCon.php';
+                                                $conn= connect();
+                                                $comID=$_SESSION['com_id'];
+                                                $access =$_SESSION['access'];
+                                                $sql= "SELECT * FROM employee_details as e , employee_payment as p
+												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'
+												and p.status='paid' ORDER BY `emp_name` DESC";
+
+                                                $resultData=$conn->query($sql);
+                                                foreach ($resultData as $row) {
+                                                    ?>
                                         <tr>
                                             <td><?=$row['emp_name']?></td>
                                             <td><?=$row['emp_phone']?></td>
@@ -297,19 +291,20 @@ $_SESSION['nav'] = 55 ; ?>
                                             <td><?=$row['emp_des']?></td>
                                             <td><?=$row['salary']?></td>
                                             <td><?=$row['date']?></td>
-											
+
 											<td><b class="text-primary">Salary Paid</b></td>
-										
+
                                         </tr>
-										<?php } ?>
+										<?php
+                                                } ?>
                                     </tbody>
-									
+
 									<tbody id="ajaxtable">
-                                        
+
 										     </tbody>
                                 </table>
                             </div>
-							
+
                         </div>
                     </div>
                 </div>
@@ -331,7 +326,7 @@ $_SESSION['nav'] = 55 ; ?>
     <script src="js/admin.js"></script>
     <script src="js/pages/forms/basic-form-elements.js"></script>
 
-    
+
     <!-- Jquery Core Js -->
     <script src="plugins/jquery/jquery.min.js"></script>
 
@@ -346,11 +341,11 @@ $_SESSION['nav'] = 55 ; ?>
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-	
+
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-	
-    
+
+
 
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
