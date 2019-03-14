@@ -26,7 +26,7 @@
 
 	if ($_REQUEST['pay_id']){
 	$pay = $_POST['pay_id'];
-	$sql="UPDATE `employee_payment` SET `status`= 'paid'  WHERE emp_pay_id='$pay'";
+	$sql="UPDATE `employee_payment` SET `payment_status`= 'paid'  WHERE emp_pay_id='$pay'";
 	$conn->query($sql);
 	}
 

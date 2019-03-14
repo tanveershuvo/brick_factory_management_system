@@ -278,8 +278,8 @@ $_SESSION['nav'] = 55 ; ?>
                                                 $comID=$_SESSION['com_id'];
                                                 $access =$_SESSION['access'];
                                                 $sql= "SELECT * FROM employee_details as e , employee_payment as p
-												WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND  e.emp_des='Manager'
-												and p.status='paid' ORDER BY `emp_name` DESC";
+												                        WHERE e.emp_id=p.emp_id AND com_id = '$comID'
+												                        and p.payment_status='paid' ORDER BY `emp_name` DESC";
 
                                                 $resultData=$conn->query($sql);
                                                 foreach ($resultData as $row) {
@@ -341,12 +341,8 @@ $_SESSION['nav'] = 55 ; ?>
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-
-
-
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>

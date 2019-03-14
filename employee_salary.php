@@ -60,16 +60,16 @@ $_SESSION['nav'] = 5 ; ?>
 				url:"ajax_insertion.php",
 				success : function(){
 					 swal({
-                          title: "Salary Paid Successfully",
-                          type: "success",
-                          confirmButtonClass: "btn-primary",
-                          confirmButtonText: "OK",
-                        }, function() {
-                            window.location.href = "employee_salary";
-                          });
-				}
-			});
-		}
+                  title: "Salary Paid Successfully",
+                  type: "success",
+                  confirmButtonClass: "btn-primary",
+                  confirmButtonText: "OK",
+                  }, function() {
+                      window.location.href = "employee_salary";
+                    });
+		             }
+			          });
+		     }
 
 			$(document).ready(function(){
           $("#myInput").on("keyup", function() {
@@ -238,14 +238,14 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
     include_once 'dbCon.php';
     $conn= connect();
     $comID=$_SESSION['com_id'];
-    $sql= "SELECT * FROM employee_details where com_id = '$comID' ";
+    $sql= "SELECT * FROM employee_details where com_id = '$comID' and status=0 ";
     $resultData=$conn->query($sql);
     foreach ($resultData as $items) {
         $id = $items['emp_id'];
         $empid= (date("my"))+$id ;
         $salary=$items['emp_salary'];
         $today = date("d/m/y");
-        $sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`status`)
+        $sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`payment_status`)
 	      values('$empid','$id','$today','$salary','unpaid')";
         $conn->query($sql);
     }
@@ -306,14 +306,22 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                 $conn= connect();
                                                 $comID=$_SESSION['com_id'];
                                                 $access =$_SESSION['access'];
+                                                if ($access==1){
                                                 $sql="SELECT * FROM employee_details as e , employee_payment as p
-                                                WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND e.status=0 AND p.payment_status='unpaid'
+                                                WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND e.status=0
+                                                AND p.payment_status='unpaid'
                                                 ORDER BY `emp_name` DESC";
+                                              } elseif($access==2){
+                                                $sql="SELECT * FROM employee_details as e , employee_payment as p
+                                                WHERE e.emp_id=p.emp_id AND e.emp_des='Staff' AND com_id = '$comID'
+                                                AND e.status=0 AND p.payment_status='unpaid'
+                                                ORDER BY `emp_name` DESC";
+                                              }
                                                 $resultData=$conn->query($sql);
-                                              foreach ($resultData as $row) {
-                                                  ?>
+                                                foreach ($resultData as $row) {
+                                                ?>
                                         <tr>
-										                  <form method="post">
+										                    <form method="post">
 		                                       <input type="hidden" value="<?=$row['emp_pay_id']?>">
                                             <td><?=$row['emp_name']?></td>
                                             <td><?=$row['emp_phone']?></td>
@@ -321,9 +329,8 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                             <td><?=$row['emp_des']?></td>
                                             <td><?=$row['salary']?></td>
                                             <td><?=$row['date']?></td>
-											<td><a name="edit" onclick="payment(<?=$row['emp_pay_id']?>)"  class="btn btn-primary waves-effect waves-float">Pay Now</a></td>
-
-										</form>
+					                                  <td><a name="edit" onclick="payment(<?=$row['emp_pay_id']?>)"  class="btn btn-primary waves-effect waves-float">Pay Now</a></td>
+                                          </form>
                                         </tr>
 												                  <?php
                                               } ?>

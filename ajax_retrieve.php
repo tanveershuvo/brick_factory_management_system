@@ -124,9 +124,9 @@
 			$comID=$_SESSION['com_id'];
 			$access =$_SESSION['access'];
 	if ($access==1){
-	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Manager'  ORDER BY emp_name ASC ";
+	$sql = "SELECT * FROM employee_details where com_id='$comID' and status=0 and emp_des='Manager'  ORDER BY emp_name ASC ";
 	} else {
-	$sql = "SELECT * FROM employee_details where com_id='$comID' and emp_des='Staff' ORDER BY emp_name ASC ";
+	$sql = "SELECT * FROM employee_details where com_id='$comID' and status=0  and emp_des='Staff' ORDER BY emp_name ASC ";
 	}
 	$result = $conn->query($sql);
 	$array;

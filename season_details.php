@@ -117,7 +117,7 @@
 		</div>
 	</nav>
 
-	<section  style="width:95%;margin-top:100px;margin-left:2.5%;margin-right:1%;" >
+	<section  style="width:95%;margin-top:30px;margin-left:2.5%;margin-right:1%;" >
         <div  class="content-fluid">
             <div class="block-header">
 				<div class="row clearfix">
@@ -159,10 +159,12 @@
 								<label>Budget : <?=$row['sea_budget']?> TK</label>
 								<hr>
 								<?php
-                        $day = date('m-d-Y');
+                        $day = date('Y-m-d');
+                        //echo $day;
                         $seaDay = $row['sea_end_time'];
+                        //echo $seaDay;
                         if ($day > $seaDay) {
-                            ?>
+                ?>
 								<label style="color:red" >Status : CLOSED </label>
 								<?php } else {?>
 								  <label style="color:green;" >Status : ACTIVE </label>
