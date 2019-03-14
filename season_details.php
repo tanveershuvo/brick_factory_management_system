@@ -159,10 +159,8 @@
 								<label>Budget : <?=$row['sea_budget']?> TK</label>
 								<hr>
 								<?php
-                        $day = date('Y-m-d');
-                        //echo $day;
+                        $day = date('m/d/Y');
                         $seaDay = $row['sea_end_time'];
-                        //echo $seaDay;
                         if ($day > $seaDay) {
                 ?>
 								<label style="color:red" >Status : CLOSED </label>

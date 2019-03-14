@@ -137,8 +137,6 @@
 		});
 	}
 
-
-
 	function customerDetailsRetrieve(){
 
 		var div = document.getElementById("customerDetails");
@@ -423,31 +421,19 @@
 	$td = $row['Total_Due'];
 
 	if (isset($_POST['add'])){
-		$cID = $_SESSION['cusID'];
-		$proID  = $_POST['pro_id'];
-		function generateRandomString()  {
-			$characters = '12345678987654321';
-			$length = 6;
-			$charactersLength = strlen($characters);
-			$randomString = '';
-			for ($i = 0; $i < $length; $i++) {
-				$randomString .= $characters[rand(0, $charactersLength - 1)];
-			}
-			return $randomString;
-		}
-
-        $order = generateRandomString();
-        $pName = $_POST['product'];
+				$cID = $_SESSION['cusID'];
+				$proID  = $_POST['pro_id'];
+        $order =	$_POST['order'];
+        $pro_id = $_POST['product'];
         $uPrice = $_POST['u_price'];
         $qnt = $_POST['qnt'];
         $tPrice = $_POST['tPrice'];
         $pay = $_POST['pay'];
         $date = date('d/m/Y');
-		$sID = $_SESSION['sea_id'];
-		$insertBy = $_SESSION['NAME'];
-
-		$sql = "INSERT INTO `order_details`(`order_id`,`cus_id`, `pro_name`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`,`sea_id`,`inserted_by`)
-		VALUES ('$order','$cID','$pName','$uPrice','$qnt','$tPrice','$pay','$date','$sID','$insertBy')";
+				$sID = $_SESSION['sea_id'];
+				$insertBy = $_SESSION['NAME'];
+				$sql = "INSERT INTO `order_details`(`order_id`,`cus_id`, `pro_id`, `unit_price`, `quantity`, `total_price`, `paid`, `order_date`,`sea_id`,`inserted_by`)
+								VALUES ('$order','$cID','$pro_id','$uPrice','$qnt','$tPrice','$pay','$date','$sID','$insertBy')";
 
 		if($conn->query($sql)){
 
@@ -549,10 +535,23 @@
 											</div>
 											<div class="row clearfix">
 												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+													<label for="password_2">Order/চালান no. :</label>
+												</div>
+												<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+													<div class="form-group">
+														<div class="form-line">
+															<input type="text" name="order" id="order"  class="form-control"  placeholder="Enter চালান number">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row clearfix">
+												<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 													<label for="password_2">Product Name :</label>
 												</div>
 												<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-													<select name="product" class=" show-tick" id="mySelect" onchange="availability()">
+
+													<select  class=" show-tick" id="mySelect" name="product" onchange="availability()">
 														<option>SELECT FROM HERE</option>
 														<?php
 															include_once 'dbCon.php';
@@ -562,7 +561,7 @@
 															$resultData=$conn->query($sql);
 															foreach ($resultData as $row){
 															?>
-															<option><?=$row['pro_name']?> </option>
+															<option value="<?=$row['pro_id']?>"><?=$row['pro_name']?></option>
 														<?php } ?>
 													</select>
 												</div>
@@ -677,8 +676,10 @@
 
 												var av = document.getElementById('av').value;
 												var pd = 0;
-
-												if (av =="product not available"){
+												if(document.getElementById('order').value==""){
+													swal('Please input in all text fields', '', 'warning')
+													return false;
+												} else if (av =="product not available"){
 
 													swal('Selected product is not available', '', 'error')
 													return false;

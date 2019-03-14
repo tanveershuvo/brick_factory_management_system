@@ -43,8 +43,8 @@
 
 	if(isset($_POST['total'])){
 	$cusid= $_SESSION['customer_id'];
-	$sql="SELECT *,sea_name FROM order_details as o , customer_details as c , season as s
-	WHERE o.cus_id=c.cus_id AND o.sea_id=s.sea_id AND o.cus_id = '$cusid' ORDER BY (total_price-paid) DESC";
+	$sql="SELECT *,sea_name FROM order_details as o , customer_details as c , season as s , product_details as p
+	WHERE o.cus_id=c.cus_id AND o.sea_id=s.sea_id AND p.pro_id=o.pro_id AND o.cus_id = '$cusid' ORDER BY (total_price-paid) DESC";
 	$result = $conn->query($sql);
 	$array;
 	while($row=mysqli_fetch_array($result)){
@@ -164,9 +164,9 @@
 
 	if(isset($_POST['av'])){
 
-		$pName = $_POST['av'];
+		$pId = $_POST['av'];
 
-	$sql = "SELECT * FROM product_details WHERE pro_name='$pName' ";
+	$sql = "SELECT * FROM product_details WHERE pro_id='$pId' ";
 
 	$result = $conn->query($sql);
 	$array;

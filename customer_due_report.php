@@ -1,7 +1,6 @@
 <?php include "template/miniheader.php";
 	unset ($_SESSION['nav']);
-	$_SESSION['nav'] = 12 ;
-	
+	$_SESSION['nav'] = 12 ;	
 ?>
 <?php include "signin_checker.php"; ?>
 <title><?php if (isset($_SESSION['com_name'])){echo $_SESSION['com_name'];};?> | HOME</title>
@@ -49,7 +48,7 @@ function drawDualX() {
 					$com=$_SESSION['com_id'];
 					$sql1="SELECT sea_name,sum(total_price)-sum(paid),c.com_id from order_details o,season s, company c
                            where o.sea_id=s.sea_id
-                           and s.com_id=c.com_id  
+                           and s.com_id=c.com_id
                            group by o.sea_id
                            having c.com_id=1";
 					$results = $conn->query($sql1);
@@ -86,8 +85,8 @@ function drawDualX() {
       materialChart.draw(data, materialOptions);
     }
  </script>
-		
-	
+
+
 </head>
 <?php include "template/mininavbar.php" ?>
 
@@ -96,7 +95,7 @@ function drawDualX() {
 		<div class="block-header">
 			<h2>CUSTOMERS DUE REPORT</h2>
 		</div>
-		
+
 		<!-- Basic Alerts -->
 		<div class="row clearfix">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -107,11 +106,11 @@ function drawDualX() {
 			</div>
 
 		</div>
-		
-		
-		
-		
-		
+
+
+
+
+
 	</div>
 </div>
 

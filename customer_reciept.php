@@ -37,15 +37,17 @@
 
 	include_once 'dbCon.php';
 	$conn= connect();
-	
-	
-		
 		$id = $_SESSION['oID'];
 		$sql = "SELECT * FROM order_details as o, customer_details as c WHERE c.cus_id=o.cus_id AND o.order_id = '$id'";
-		$results=$conn->query($sql);
-        $row = mysqli_fetch_assoc($results);
+    //echo $sql;exit;
+    $results=$conn->query($sql);
+    $row = mysqli_fetch_assoc($results);
 		$oID = $row['order_id'];
-		$pn = $row['pro_name'];
+		$pID = $row['pro_id'];
+    $ssql = "SELECT * FROM product_details WHERE pro_id='$pID'";
+    $result=$conn->query($ssql);
+    $rows = mysqli_fetch_assoc($result);
+    $pn = $rows['pro_name'];
 		$up = $row['unit_price'];
 		$qt = $row['quantity'];
 		$tp = $row['total_price'];
@@ -56,15 +58,15 @@
 		$ca = $row['cus_address'];
 		$by = $row['inserted_by'];
 		$due = ($tp - $pd);
-		
-	
+
+
 
 ?>
 <section class="content" >
         <div class="container">
-   
+
         <div class="col-xs-12 "><br><br>
-		<img src="images/<?=$_SESSION['image']?>" 
+		<img src="images/<?=$_SESSION['image']?>"
 		alt="Smiley face" height="150" width="1110">
     		<div class="invoice-title ">
 			<br>
@@ -77,7 +79,7 @@
     			</address>
 				</div>
     		</div>
-			
+
 			<div class="col-xs-12 well ">
     			<div class="col-xs-6">
 					<h3>Billed To </h3>
@@ -85,7 +87,7 @@
 					<h4>Contact : <b><?=$cp?></b></h4>
     				<h4><?=$ca?></h4></b>
     				<address>
-        			
+
     			</div>
 				<div class="col-xs-6 text-right">
     				<h3>Order Id : <b># <?=$oID?></b></h3>
@@ -93,10 +95,10 @@
 					<h4>Inserted By : <b><?php echo $by;?></b></h4>
     			</div>
     		</div>
-    		
+
     	</div>
-   
-   
+
+
     	<div class="col-xs-12">
     				<div class="table-responsive">
     					<table class="table table-bordered table-striped table-hover " style="font-size:18px;">
@@ -116,7 +118,7 @@
     								<td class="text-center"><?=$qt?></td>
     								<td class="text-right"><?=$tp?> TK</td>
     							</tr>
-                              
+
     							<tr>
     								<td class="thick-line"></td>
     								<td class="thick-line"></td>
@@ -134,13 +136,13 @@
     						</tbody>
     					</table>
     				</div>
-    			
-    		
+
+
     	</div>
-   
+
 	</br>
 	<Button class="hide-from-printer btn btn-success btn-lg btn-block"  onClick="window.print()"> <span class="glyphicon glyphicon-print"> PRINT INVOICE</button>
-	
+
 
 </div>
 </section>
