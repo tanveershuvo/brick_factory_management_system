@@ -1,7 +1,7 @@
-<?php 
+<?php
 	if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']==TRUE) {
 	}
 	else{
-	header('location:logout.php');
+	echo '<script>window.location.href = "logout"</script>';
 	}
 ?>

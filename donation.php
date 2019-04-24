@@ -1,6 +1,6 @@
 <?php include "template/miniheader.php";
 	unset ($_SESSION['nav']);
-	$_SESSION['nav'] = 7 ;
+	$_SESSION['nav'] = 98 ; 
 ?>
 <?php include "signin_checker.php" ?>
 
@@ -35,9 +35,9 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script>
-
+	
 	window.onload = function dataretrieve(){
-
+		
 		var tbody = document.getElementById("ajaxtable");
 		var tableRow="";
 		$.ajax({
@@ -46,45 +46,43 @@
 			data:{"mechinaries":1},
 			dataType:"json",
 			success : function(response){
-
+				
 				for(var i=0;i<response.length ;i++){
-
+					
 					tableRow += "<tr><td class='text-Primary'  style='text-align:center;' > <b>"+response[i].receipt+"</td>"+
 					"<td>"+response[i].name+"</td>"+
-					"<td>"+response[i].type+"</td>"+
-					"<td>"+response[i].quantity+"</td>"+
 					"<td>"+response[i].rate+" Tk</td>"+
-					"<td style='text-align:center;' > <b>"+response[i].date+" </td> "+
+					"<td style='text-align:center;' > <b>"+response[i].date+" </td> "+				 
 					"<td><a onclick='edit("+response[i].m_id+")'  class='btn btn-primary a-btn-slide-text' data-toggle='modal' data-target='#edit_modal'>"+
 					"<span class='glyphicon glyphicon-plus'></span><span><strong>EDIT</strong></span></a></td>"+
-					"</tr>";
+					"</tr>";  
 					/*loop end*/
 				}
 				tbody.innerHTML = tableRow;
 			}
 		});
 	}
-
+	
 	function edit(m_id){
-
+		
 		$.ajax({
 			type:'POST',
 			url:"ajax_retrieve.php",
 			data:{mID:m_id},
 			dataType:"json",
 			success : function(response){
-
+				
 				document.getElementById('m_id').value=response[0].m_id;
 				document.getElementById('rt').value=response[0].rate;
 				document.getElementById('qt').value=response[0].quantity;
 				document.getElementById('nm').value=response[0].name;
 				document.getElementById('dt').value=response[0].date;
 				document.getElementById('tp').value=response[0].type;
-
+				
 			}
 		});
 	}
-
+	
 	function editsuccess(){
 		swal({
 			title: "Edit Successful!!",
@@ -94,11 +92,11 @@
 			confirmButtonText: "OK!"
 		},
 		function(){
-			window.location.href= "mechinaries";
+			window.location.href= "http://localhost/bfms/mechinaries.php";
 		});
-	}
-
-
+	}	
+	
+	
 	function success(){
 		swal({
 			title: "Add Successful!!",
@@ -108,10 +106,10 @@
 			confirmButtonText: "OK!"
 		},
 		function(){
-			window.location.href= "mechinaries.php";
+			window.location.href= "http://localhost/bfms/mechinaries.php";
 		});
 	}
-
+	
 	function myFN(){
 		swal({
 			title: "Duplicate Entry!!",
@@ -121,10 +119,10 @@
 			confirmButtonText: "OK!"
 		},
 		function(){
-			window.location.href= "mechinaries";
+			window.location.href= "http://localhost/bfms/mechinaries.php";
 		});
 	}
-
+	
 	$(document).ready(function(){
 		$("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
@@ -133,11 +131,11 @@
 			});
 		});
 	});
-
-
+	
+	
     jQuery(function ($) {
         $("#excel").click(function () {
-
+			
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
@@ -227,10 +225,10 @@
 			});
 		});
 	});
-
+	
 	jQuery(function ($) {
         $("#pdf").click(function () {
-
+			
 			d = Date.now();
 			d = new Date(d);
 			d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
@@ -249,22 +247,22 @@
 					}
 				}
 			});
-
+			
             // when parsing is done, export the data to PDF
             dataSource.read().then(function (data) {
                 var pdf = new shield.exp.PDFDocument({
                     author: "PrepBootstrap",
                     created: new Date()
 				});
-
+				
                 pdf.addPage("a4", "portrait");
-
+				
                 pdf.table(
 				50,
 				50,
 				data,
-				[
-
+				[	
+				
 				{ field: "Reciept_No", title: "Reciept_No", width: 85 },
 				{ field: "Name", title: "Name", width: 85 },
 				{ field: "Mechinary_Type", title: "Mechinary Type", width: 100 },
@@ -300,14 +298,14 @@
 	-moz-transition-duration: 0.5s;
 	-o-transition-duration: 0.5s;
 	}
-
+	
 </style>
 </head>
-<?php include "template/mininavbar.php"; ?>
+<?php include "template/mininavbar.php"; ?> 
 <?php
 	include_once 'dbCon.php';
 	$conn= connect();
-
+	
 	if (isset($_POST['submit'])){
 		//echo 'fgfgfg';exit;
 		$Rate = $_POST['Rate'];
@@ -321,7 +319,7 @@
 		$result = $conn->query($sql);
 		if($result->num_rows < 1){
 			$sql = "INSERT INTO mechinaries_details (rate,type,quantity,name,receipt,date,com_id) VALUES ('$Rate','$Type','$Quantity','$Name','$Receipt','$date','$comID')";
-
+			
 			if ($conn->query($sql)){
 				echo "<Script>success()</Script>";
 			}
@@ -329,8 +327,8 @@
 			echo "<Script>myFN()</Script>";
 		}
 	}
-
-
+	
+	
 	if(isset($_POST['edit'])){
 		$Rate = $_POST['rt'];
 		$Type = $_POST['tp'];
@@ -342,20 +340,20 @@
 	    if ($conn->query($sql)){
 			echo "<Script>editsuccess()</Script>";
 		}
-
+		
 	}
-
+	
 ?>
 <script>
-
-
+	
+	
 	function check_info(){
 		var Rate= document.getElementById('Rate').value;
 		var Type= document.getElementById('Type').value;
 		var Quantity= document.getElementById('Quantity').value;
 		var Receipt = document.getElementById('Receipt').value;
 		var Name = document.getElementById('Name').value;
-
+		
 		if (Name==""){
 			swal('Please input Name', '', 'warning')
 			return false;
@@ -364,12 +362,12 @@
 			swal('Please select mechinary type', '', 'warning')
 			return false;
 		}
-
+		
 		if (Rate==""){
 			swal('Please input Rate', '', 'warning')
 			return false;
 		}
-
+		
 		if (Quantity==""){
 			swal('Please input Quantity', '', 'warning')
 			return false;
@@ -378,16 +376,16 @@
 			swal('Please input Receipt no', '', 'warning')
 			return false;
 		}
-
+		
 	}
-
-
+	
+	
 	function check_edit_info(){
 		var Rate= document.getElementById('rt').value;
 		var Type= document.getElementById('tp').value;
 		var Quantity= document.getElementById('qt').value;
 		var Name = document.getElementById('nm').value;
-
+		
 		if (Name==""){
 			swal('Please input Name', '', 'warning')
 			return false;
@@ -396,108 +394,103 @@
 			swal('Please select machinary type', '', 'warning')
 			return false;
 		}
-
-
+		
+		
 		if (Rate==""){
 			swal('Please input Rate', '', 'warning')
 			return false;
 		}
-
+		
 		if (Quantity==""){
 			swal('Please input Quantity', '', 'warning')
 			return false;
 		}
-
-
+		
+		
 	}
-
+	
 	function validation(){
-
+		
 		var Rate= document.getElementById('Rate').value;
 		var Quantity= document.getElementById('Quantity').value;
-
+		
 		if(isNaN(Rate)){
 			swal('Rate have only numbers!!', '', 'warning')
 			document.getElementById('Rate').value='';
-			return false;
+			return false;					
 		}
-
+		
 	}
-
+	
 	function validation2(){
-
+		
 		var Rate= document.getElementById('rt').value;
 		var Quantity= document.getElementById('qt').value;
-
+		
 		if(isNaN(Rate)){
 			swal('Rate have only numbers!!', '', 'warning')
 			document.getElementById('rt').value='';
-			return false;
+			return false;					
 		}
-
+		
 	}
-
-
+	
+	
 </script>
 
 <section class="content">
 	<div class="container-fluid">
 		<div class="block-header">
-
+			
 			<button type="button" class="col-lg-offset-9 col-md-offset-4 col-sm-offset-4 col-xs-offset-5 btn btn-primary waves-effect m-r-30" data-toggle="modal" data-target="#largeModal"><i class="material-icons">add_to_queue</i> ADD NEW MACHINARY DETAILS</button>
 			<h2>
-				<b> MACHINARY AND PARTS DETAILS</b>
-			</h2>
+				<b> DONATION DETAILS</b>
+			</h2>		
 		</div>
 		<!-- Exportable Table -->
 		<div class="row clearfix">
 			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 				<div class="card">
 					<div class="header">
-						<div class="row clearfix">
+						<div class="row clearfix">                 
                             <div class="col-lg-4 ">
 								<div class="form-line">
-
 									<input type="text" name="Name"  id="myInput" class="form-control"  placeholder="Search here....." >
-
-
 								</div>
-							</div>
+							</div>	
 							<div class="col-lg-4 ">
-
+								
 							</div>
 							<div class="col-lg-2 ">
 							<button id="excel" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">explicit</i> </span> Export to Excel </button>
-
-						</div>
+							
+						</div>	
 						<div class="col-lg-2 ">
 						<button id="pdf" class="btn btn-md btn-secoundary clearfix"><i class="material-icons">description</i> </span> Export to PDF</button><br><br>
-
-					</div>
-				</div>
+						
+					</div>								
+				</div> 
 			</div>
-
+			
 			<div class="body">
 				<div class="table-responsive">
 					<table id="exportTable" class="table table-bordered table-striped  ">
 						<thead>
 							<tr>
 								<th>Reciept_No</th>
-								<th>Name</th>
-								<th>Mechinary_Type</th>
-								<th>Quantity</th>
-								<th>Rate</th>
 								<th>Date</th>
-								<th>Action</th>
+								<th>Name</th>
+								<th>Address</th>
+								<th>Amount</th>
 							</tr>
 						</thead>
-
+						
 						<tbody class="table" id = "ajaxtable">
-
+							
 						</tbody>
 					</table>
 				</div>
-
+				
 			</div>
 		</div>
 	</div>
@@ -522,30 +515,30 @@
 <script src="js/jquery.number.js"></script>
 
 <script type="text/javascript">
-
+	
 	$(function(){
 		// Set up the number formatting.
-
+		
 		$('#number_container').slideDown('fast');
-
+		
 		$('#price').on('change',function(){
 			console.log('Change event.');
 			var val = $('#price').val();
 			$('#the_number').text( val !== '' ? val : '(empty)' );
 		});
-
+		
 		$('#price').change(function(){
 			console.log('Second change event...');
 		});
-
+		
 		$('#price').number( true, 2 );
-
-
+		
+		
 		// Get the value of the number for the demo.
 		$('#get_number').on('click',function(){
-
+			
 			var val = $('#price').val();
-
+			
 			$('#the_number').text( val !== '' ? val : '(empty)' );
 		});
 	});
@@ -583,10 +576,22 @@
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title" align="center" id="largeModalLabel">Insert Mechinaries Information here :</h4><hr>
+					<h4 class="modal-title" align="center" id="largeModalLabel">Insert Donation Information here :</h4><hr>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" id="insert_form" onsubmit="return check_info();" method ="POST" >
+					<div class="row clearfix">
+							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+								<label for="password_2">Date :</label>
+							</div>
+							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+								<div class="form-group">
+									<div class="form-line">
+										<input type="date" name="date"  id="date" class="form-control" value="<?php print(date("Y-m-d")); ?>"/> 
+									</div>
+								</div>
+							</div>
+						</div><br>	
 						<div class="row clearfix">
 							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 								<label for="password_2">Name :</label>
@@ -594,41 +599,28 @@
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" name="Name"  id="Name" class="form-control" placeholder="Enter Rate" >
+										<input type="text" name="Name"  id="Name" class="form-control" placeholder="Enter Person or Organization Name" >
 									</div>
 								</div>
 							</div>
 						</div> <br>
-
-						<div class="row clearfix">
-							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
-								<label for="password_2">Type :</label>
-							</div>
-							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-								<select name ="Type" id="Type" class="form-control show-tick">
-									<option value="-- Please select --">-- Please select --</option>
-									<option value="Mechine">Mechine</option>
-									<option value="Parts">Parts</</option>
-								</select>
-							</div>
-						</div></br>
 						<div class="row clearfix">
 							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-								<label >Quantity :</label>
+								<label >Address :</label>
 							</div>
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
 									<div class="form-line">
-										<input type="text" name="Quantity" oninput="validation()" id="Quantity" class="form-control" placeholder="Enter Quantity" >
-
+										<input type="text" name="address" oninput="validation()" id="address" class="form-control" placeholder="Enter Quantity" >
+										
 									</div>
 								</div>
 							</div>
 						</div></br>
-
+						
 						<div class="row clearfix">
 							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-								<label >Rate :</label>
+								<label >Amount :</label>
 							</div>
 							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 								<div class="form-group">
@@ -638,7 +630,7 @@
 								</div>
 							</div>
 						</div></br>
-
+						
 						<div class="row clearfix">
 							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 								<label >Receipt No. :</label>
@@ -651,44 +643,46 @@
 								</div>
 							</div>
 						</div></br>
-						<div class="row clearfix">
-							<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-								<label for="password_2">Date :</label>
-							</div>
-							<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-								<div class="form-group">
-									<div class="form-line">
-										<input type="date" name="date"  id="date" class="form-control" value="<?php print(date("Y-m-d")); ?>"/>
-									</div>
-								</div>
-							</div>
-						</div><br>
+						 
 					</div>
 					<div class="modal-footer">
 						<button type="submit" name= "submit" id= "submit" class="btn btn-primary">SAVE </button>
 						<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
 					</div>
-					<div>
+					<div> 
 					</form>
 				</div>
 			</div>
 		</div>
 	</div>
 	<!-- CREATE MODAL ----------------------------------------------------------------------------------------------------------------------------->
-
-
+	
+	
 	<!-- EDIT MODAL ----------------------------------------------------------------------------------------------------------------------------->
 	<div class="body">
 		<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title" align="center"  id="largeModalLabel">Edit Mechinaries Information here :</h4><hr>
+						<h4 class="modal-title" align="center"  id="largeModalLabel">Edit Donation Information here :</h4><hr>
 					</div>
 					<div class="modal-body">
 						<form class="form-horizontal" id="insert_form" name="editable" onsubmit="return check_edit_info();" method ="POST" >
 							<input type="hidden" name="m_id" id="m_id">
-
+							
+							<div class="row clearfix">
+								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
+									<label for="password_2">Date :</label>
+								</div>
+								<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
+									<div class="form-group">
+										<div class="form-line">
+											<input type="date" name="dt"  id="dt" class="form-control" value="<?php print(date("Y-m-d")); ?>"/> 
+										</div>
+									</div>
+								</div>
+							</div><br>
+							
 							<div class="row clearfix">
 								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
 									<label for="password_2">Name :</label>
@@ -701,21 +695,10 @@
 									</div>
 								</div>
 							</div> <br>
-							<div class="row clearfix">
-								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label" >
-									<label for="password_2">Type :</label>
-								</div>
-								<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-									<select name ="tp" id="tp" class="form-control show-tick">
-										<option value="-- Please select --">-- Please select --</option>
-										<option value="Mechine">Mechine</option>
-										<option value="Parts">Parts</</option>
-									</select>
-								</div>
-							</div></br>
+						
 							<div class="row clearfix">
 								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-									<label >Quantity :</label>
+									<label >Address :</label>
 								</div>
 								<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 									<div class="form-group">
@@ -725,10 +708,10 @@
 									</div>
 								</div>
 							</div></br>
-
+							
 							<div class="row clearfix">
 								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-									<label >Rate :</label>
+									<label >Amount :</label>
 								</div>
 								<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
 									<div class="form-group">
@@ -738,21 +721,7 @@
 									</div>
 								</div>
 							</div></br>
-
-
-							<div class="row clearfix">
-								<div class="col-lg-4 col-md-4 col-sm-8 col-xs-8 form-control-label">
-									<label for="password_2">Date :</label>
-								</div>
-								<div class="col-lg-6 col-md-10 col-sm-8 col-xs-7">
-									<div class="form-group">
-										<div class="form-line">
-											<input type="date" name="dt"  id="dt" class="form-control" value="<?php print(date("Y-m-d")); ?>"/>
-										</div>
-									</div>
-								</div>
-							</div><br>
-
+							
 						</div>
 						<div class="modal-footer">
 							<button type="submit" name= "edit" id= "submit" class="btn btn-primary">SAVE </button>
@@ -764,7 +733,7 @@
 		</div>
 	</div>
 	<!-- EDIT MODAL ----------------------------------------------------------------------------------------------------------------------------->
-
-
-
+	
+	
+	
 </html>

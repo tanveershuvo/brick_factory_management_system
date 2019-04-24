@@ -1,10 +1,10 @@
 <?php include "template/miniheader.php";
 unset($_SESSION['nav']);
-$_SESSION['nav'] = 5 ; ?>
+$_SESSION['nav'] = 55 ; ?>
 <?php include "signin_checker.php"; ?>
 <title><?php if (isset($_SESSION['com_name'])) {
     echo $_SESSION['com_name'];
-};?> | EMP SALARY</title>
+};?> | Emp Paid</title>
     <!-- Bootstrap Core Css -->
     <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
 
@@ -26,52 +26,23 @@ $_SESSION['nav'] = 5 ; ?>
 
     <!-- Bootstrap Material Datetime Picker Css -->
     <link href="plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
-
-    <!-- Wait Me Css -->
-    <link href="plugins/waitme/waitMe.css" rel="stylesheet" />
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <!-- Wait Me Css -->
+	<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+	<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script>
+    <link href="plugins/waitme/waitMe.css" rel="stylesheet" />
+
     <!-- Bootstrap Select Css -->
     <link href="plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css">
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
+
 	<script>
 
-		function mail(eid){
-
-		$.ajax({
-				type:'POST',
-				data:{empp_id:eid},
-				url:"ajax_retrieve.php",
-				success : function(){
-					 window.location.href = "employee_salary";
-				}
-			});
-
-		}
-
-		function payment(id){
-
-			$.ajax({
-				type:'POST',
-				data:{pay_id:id},
-				url:"ajax_insertion.php",
-				success : function(){
-					 swal({
-                  title: "Salary Paid Successfully",
-                  type: "success",
-                  confirmButtonClass: "btn-primary",
-                  confirmButtonText: "OK",
-                  }, function() {
-                      window.location.href = "employee_salary";
-                    });
-		             }
-			          });
-		     }
-
-			$(document).ready(function(){
+	$(document).ready(function(){
           $("#myInput").on("keyup", function() {
             var value = $(this).val().toLowerCase();
             $("#ajaxtable tr").filter(function() {
@@ -83,20 +54,20 @@ $_SESSION['nav'] = 5 ; ?>
 
     jQuery(function ($) {
         $("#excel").click(function () {
-		d = Date.now();
-d = new Date(d);
-d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
+
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
                 schema: {
                     type: "table",
                     fields: {
-                        Customer_Name: { type: String },
+                        EmployeeName: { type: String },
                         Mobile: { type: String },
-                        Address: { type: String },
-                        Total_Due: { type: String },
-                        Total_Order: { type: String }
+                        Gmail: { type: String },
+                        Designation: { type: String },
+                        Salary: { type: String },
+                        Date: { type: String },
+                        Status: { type: String }
 
                     }
                 }
@@ -116,7 +87,7 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                 bold: true
                                             },
                                             type: String,
-                                            value: "Customer_Name"
+                                            value: "EmployeeName"
                                         },
                                         {
                                             style: {
@@ -130,21 +101,35 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                                                 bold: true
                                             },
                                             type: String,
-                                            value: "Address"
+                                            value: "Gmail"
                                         },
                                         {
                                             style: {
                                                 bold: true
                                             },
                                             type: String,
-                                            value: "Total_Due"
+                                            value: "Designation"
+                                        },
+										{
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Salary"
                                         },
                                         {
                                             style: {
                                                 bold: true
                                             },
                                             type: String,
-                                            value: "Total_Order"
+                                            value: "Date"
+                                        },
+                                        {
+                                            style: {
+                                                bold: true
+                                            },
+                                            type: String,
+                                            value: "Status"
                                         }
 
                                     ]
@@ -152,18 +137,20 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                             ].concat($.map(data, function(item) {
                                 return {
                                     cells: [
-                                        { type: String, value: item.Customer_Name },
+                                        { type: String, value: item.EmployeeName },
                                         { type: String, value: item.Mobile },
-                                        { type: String, value: item.Address },
-                                        { type: String, value: item.Total_Due },
-                                        { type: String, value: item.Total_Order }
+                                        { type: String, value: item.Gmail },
+                                        { type: String, value: item.Designation },
+                                        { type: String, value: item.Salary },
+                                        { type: String, value: item.Date },
+                                        { type: String, value: "Paid" }
                                     ]
                                 };
                             }))
                         }
                     ]
                 }).saveAs({
-					fileName: d+'_'+'customer_details'
+					fileName:'employees_paid_salary'
                 });
             });
         });
@@ -176,20 +163,19 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 		d = new Date(d);
 		d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
-
-
-
             // parse the HTML table element having an id=exportTable
             var dataSource = shield.DataSource.create({
                 data: "#exportTable",
                 schema: {
                     type: "table",
                     fields: {
-                        Customer_Name: { type: String },
+                        EmployeeName: { type: String },
                         Mobile: { type: String },
-                        Address: { type: String },
-                        Total_Due: { type: String },
-                        Total_Order: { type: String }
+                        Gmail: { type: String },
+                        Designation: { type: String },
+                        Salary: { type: String },
+                        Date: { type: String },
+                        Status: { type: String },
                     }
                 }
             });
@@ -209,11 +195,13 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                     data,
                     [
 
-                        { field: "Customer_Name", title: "Customer_Name", width: 100 },
-                        { field: "Mobile", title: "Mobile", width: 85 },
-                        { field: "Address", title: "Address Type", width: 150 },
-                        { field: "Total_Due", title: "Total_Due", width: 85 },
-                        { field: "Total_Order", title: "Total_Order", width: 85 }
+                        { field: "EmployeeName", title: "EmployeeName", width: 70 },
+                        { field: "Mobile", title: "Mobile", width: 70 },
+                        { field: "Gmail", title: "Gmail", width: 70 },
+                        { field: "Designation", title: "Designation", width: 70 },
+                        { field: "Salary", title: "Salary", width: 70 },
+                        { field: "Date", title: "Salary", width: 70 },
+                        { field: "Status", title: "Status", width: 70 },
                     ],
                     {
                         margins: {
@@ -223,34 +211,17 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                     }
                 );
                 pdf.saveAs({
-                    fileName: d+'_'+'customer details'
+                    fileName: d+'_'+'employee_paid_details'
                 });
             });
         });
     });
 
 
-
 	</script>
-</head>
-<?php include "template/mininavbar.php" ?>
-<?php
-    include_once 'dbCon.php';
-    $conn= connect();
-    $comID=$_SESSION['com_id'];
-    $sql= "SELECT * FROM employee_details where com_id = '$comID' and status=0 ";
-    $resultData=$conn->query($sql);
-    foreach ($resultData as $items) {
-        $id = $items['emp_id'];
-        $empid= (date("my"))+$id ;
-        $salary=$items['emp_salary'];
-        $today = date("d/m/y");
-        $sql = "INSERT INTO employee_payment (`emp_pay_id`,`emp_id`,`date`,`salary`,`payment_status`)
-	      values('$empid','$id','$today','$salary','unpaid')";
-        $conn->query($sql);
-    }
-?>
 
+	</head>
+<?php include "template/mininavbar.php" ?>
 <section class="content">
         <div class="container-fluid">
             <div class="block-header">
@@ -287,56 +258,50 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
                         </div>
                         <div class="body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover ">
+                                <table id="exportTable" class="table table-bordered table-striped table-hover ">
                                     <thead>
                                         <tr>
-                                            <th>Employee Name</th>
+                                            <th>EmployeeName</th>
                                             <th>Mobile</th>
                                             <th>Gmail</th>
                                             <th>Designation</th>
-                                            <th>SALARY </th>
-                                            <th>DATE</th>
-                                            <th>Action</th>
+                                            <th>Salary</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-									                             <?php
+                                    <tbody id = "ajaxtable">
+									<?php
                                                 include_once 'dbCon.php';
                                                 $conn= connect();
                                                 $comID=$_SESSION['com_id'];
                                                 $access =$_SESSION['access'];
-                                                if ($access==1){
-                                                $sql="SELECT * FROM employee_details as e , employee_payment as p
-                                                WHERE e.emp_id=p.emp_id AND com_id = '$comID' AND e.status=0
-                                                AND p.payment_status='unpaid'
-                                                ORDER BY `emp_name` DESC";
-                                              } elseif($access==2){
-                                                $sql="SELECT * FROM employee_details as e , employee_payment as p
-                                                WHERE e.emp_id=p.emp_id AND e.emp_des='Staff' AND com_id = '$comID'
-                                                AND e.status=0 AND p.payment_status='unpaid'
-                                                ORDER BY `emp_name` DESC";
-                                              }
+                                                $sql= "SELECT * FROM employee_details as e , employee_payment as p
+												                        WHERE e.emp_id=p.emp_id AND com_id = '$comID'
+												                        and p.payment_status='paid' ORDER BY `emp_name` DESC";
+
                                                 $resultData=$conn->query($sql);
                                                 foreach ($resultData as $row) {
-                                                ?>
+                                                    ?>
                                         <tr>
-										                    <form method="post">
-		                                       <input type="hidden" value="<?=$row['emp_pay_id']?>">
                                             <td><?=$row['emp_name']?></td>
                                             <td><?=$row['emp_phone']?></td>
                                             <td><?=$row['emp_email']?></td>
                                             <td><?=$row['emp_des']?></td>
                                             <td><?=$row['salary']?></td>
                                             <td><?=$row['date']?></td>
-					                                  <td><a name="edit" onclick="payment(<?=$row['emp_pay_id']?>)"  class="btn btn-primary waves-effect waves-float">Pay Now</a></td>
-                                          </form>
+
+											<td><b class="text-primary">Salary Paid</b></td>
+
                                         </tr>
-												                  <?php
-                                              } ?>
-                                            </tbody>
-                                            <tbody id="ajaxtable">
-                                            </tbody>
+										<?php
+                                                } ?>
+                                    </tbody>
+
+									<tbody id="ajaxtable">
+
+										     </tbody>
                                 </table>
                             </div>
 
@@ -376,12 +341,8 @@ d = d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
 
     <!-- Waves Effect Plugin Js -->
     <script src="plugins/node-waves/waves.js"></script>
-
 	<!-- Sweet Alert Plugin Js -->
     <script src="plugins/sweetalert/sweetalert.min.js"></script>
-
-
-
     <!-- Custom Js -->
     <script src="js/admin.js"></script>
     <script src="js/pages/tables/jquery-datatable.js"></script>

@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -38,7 +39,7 @@
 	</head>
 	<body class="login-page">
 		<?php
-            session_start();
+
             include_once 'dbCon.php';
             $conn = connect();
             if (isset($_POST['signin'])) {
@@ -63,7 +64,7 @@
                             $_SESSION['com_id']=$tf['com_id'];
                             $_SESSION['com_name']=$tf['company_name'];
                             $_SESSION['image']=$tf['image'];
-                            header('location:season_details.php');
+                            echo '<script>window.location.href = "season_details"</script>';
                         } elseif ($row['access_level']==2) {
                             $id = $row['log_id'];
                             $_SESSION['access']=$row['access_level'];
@@ -77,11 +78,11 @@
                             $tf = mysqli_fetch_assoc($results);
                             $_SESSION['com_id']=$tf['com_id'];
                             $_SESSION['com_name']=$tf['company_name'];
-                            header('location:dashboard.php');
+                            echo '<script>window.location.href = "dashboard"</script>';
                         } else {
                             $_SESSION['NAME']=$row['email'];
                             $_SESSION['access']=$row['access_level'];
-                            header('location:company.php');
+                            echo '<script>window.location.href = "company"</script>';
                         }
                     }
                 } else {
@@ -91,7 +92,7 @@
                         $_SESSION['isLoggedIn'] = true;
                         foreach ($results as $row) {
                             $_SESSION['email']=$row['email'];
-                            header('location:new_password.php');
+                            echo '<script>window.location.href = "new_password"</script>';
                         }
                     }
                 }
@@ -101,22 +102,20 @@
 
 		<div class="login-box">
 			<div class="logo">
-				<a href="javascript:void(0);">Brick Ftory Management System</a>
+				<a href="javascript:void(0);">Brick Factory Management System</a>
 			</div>
 			<div class="card">
 				<div class="body">
-					<form  method="POST" onsubmit = "return myFN();">
-
+					<form  method="POST" onsubmit="return myFN()">
 						<div class="msg"><b>Sign in to enter the site </b></div>
 						<span id ="msgs" style="font-size:12px;color:red;font-weight:bold;"></span>
-
 						<div class="form-group form-float">
 						<div class="input-group">
 							<span class="input-group-addon">
 								<i class="material-icons">person</i>
 							</span>
 							<div class="form-line">
-								<input type="text" class="form-control" name="email" id="username"  placeholder="usermails"  >
+								<input type="text" class="form-control" name="email" id="username" oninput="myFN()"  placeholder="usermails"  >
 							</div>
 							<span id ="msg1" style="font-size:12px;color:red;font-weight:bold;"></span>
 						</div>
@@ -128,7 +127,7 @@
 								<i class="material-icons">lock</i>
 							</span>
 							<div class="form-line">
-								<input type="password" class="form-control" name="password" id="password" placeholder="Password" >
+								<input type="password" class="form-control" name="password" id="password"  oninput="myFN()"  placeholder="Password" >
 							</div>
 							<span id ="msg2" style="font-size:12px;color:red;font-weight:bold;"></span>
 						</div>
@@ -151,15 +150,17 @@
 				if (email==""){
 					document.getElementById('msg1').innerHTML = "**Please Input User Mail";
 					return false;
+				} else {
+					document.getElementById('msg1').innerHTML = "";
 				}
 				if (password==""){
 					document.getElementById('msg2').innerHTML = "**Please Input password";
 					return false;
+				} else{
+						document.getElementById('msg2').innerHTML = "";
 				}
 			}
 		</script>
-
-
 		<!-- Jquery Core Js -->
 		<script src="plugins/jquery/jquery.min.js"></script>
 		<!-- Bootstrap Core Js -->

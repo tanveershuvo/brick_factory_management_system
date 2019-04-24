@@ -1,11 +1,11 @@
 
 <body class="theme-deep-purple">
-	
+
 	<!-- Top Bar -->
 	<nav class="navbar ">
         <div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href=""><?php $cn=$_SESSION['com_name']; if (isset($cn)){echo $cn;}?></a>
+				<a class="navbar-brand" href=""><?php $cn=$_SESSION['com_name']; if (isset($cn)){echo $cn;} else {echo "";}?></a>
 			</div>
 			<ul class="nav navbar-nav ">
 				
@@ -69,22 +69,8 @@
 							</a>
 						</li>
 						<?php } ?>
-						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==11)){ echo 'class="header" ';}
-						if($_SESSION['access']==(1||2)){?>>
-							<a href="sordar_report">
-								<i class="material-icons">bubble_chart</i>
-								<span>Sordar Details Report</span>
-							</a>
-						</li>
-						<?php } ?>
-						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==12)){ echo 'class="header" ';}
-						if($_SESSION['access']==(1||2)){?>>
-							<a href="customer_due_report">
-								<i class="material-icons">report</i>
-								<span>Customer Due Report</span>
-							</a>
-						</li>
-						<?php } ?>
+						
+						
 						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==13)){ echo 'class="header" ';}
 						if($_SESSION['access']==(1||2)){?>>
 							<a href="expenses_report">
@@ -93,7 +79,7 @@
 							</a>
 						</li>
 						<?php } ?>
-						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==4) || ($_SESSION['nav']==5)){ echo 'class="active" ';}
+						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==4) || ($_SESSION['nav']==5)|| ($_SESSION['nav']==55)){ echo 'class="active" ';}
 					if($_SESSION['access']==(1||2)){?>>
                         <a class="menu-toggle">
                             <i class="material-icons">person_outline</i>
@@ -109,7 +95,13 @@
 								<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==5)){ echo 'class="header" ';}?>>
 									<a href="employee_salary">
 										<i class="material-icons">attach_money</i>
-										<span>Employee Salary Payment</span>
+										<span>Employee's Unpaid Salary</span>
+									</a>
+								</li>
+								<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==55)){ echo 'class="header" ';}?>>
+									<a href="employee_paid_salary">
+										<i class="material-icons">av_timer</i>
+										<span>Employee's Paid Salary </span>
 									</a>
 								</li>
 								
@@ -140,7 +132,7 @@
 					<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==8)){ echo 'class="header" ';}?>>
 							<a href="sordar_add">
 								<i class="material-icons">people</i>
-								<span>Sordar Details</span>
+								<span>Sordar/Foreman Details</span>
 							</a>
 						</li>
 						
@@ -154,6 +146,22 @@
 							</a>
 						</li>
 						<?php }?>
+						<li <?php if(isset ($_SESSION['nav'])&& ($_SESSION['nav']==98)){ echo 'class="header" ';}
+						if($_SESSION['access']==(0)){?>>
+							<a href="donation">
+								<i class="material-icons">money</i>
+								<span>Donation</span>
+							</a>
+						</li>
+						<?php }?>
+						<li >
+						
+							<a href="new_password">
+								<i class="material-icons">lock</i>
+								<span>Update Password</span>
+							</a>
+						</li>
+						
 						
 						
 						

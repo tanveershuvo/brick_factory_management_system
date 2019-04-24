@@ -1,10 +1,10 @@
 <?php
     include_once 'dbCon.php';
 	$conn= connect();
-	
-	
+
+
 	session_start();
-										
+
 	if ($_REQUEST['oid']){
 	$id = $_POST['oid'];
 	$de = $_POST['due'];
@@ -23,13 +23,13 @@
 	$sql="INSERT INTO sordar_weekly_bill(sor_id,date,weekly_bill,paid_by,pay_id) VALUES('$sd','$today' ,'$pay' , '$name','$payID') ";
 	$conn->query($sql);
 	}
-	
+
 	if ($_REQUEST['pay_id']){
 	$pay = $_POST['pay_id'];
-	$sql="UPDATE `employee_payment` SET `status`= 'paid'  WHERE emp_pay_id='$pay'";
+	$sql="UPDATE `employee_payment` SET `payment_status`= 'paid'  WHERE emp_pay_id='$pay'";
 	$conn->query($sql);
 	}
-	
+
 	if ($_REQUEST['pay']){
 	$pay = $_POST['pay'];
 	$sd = $_SESSION['sordar_id'];
@@ -48,7 +48,6 @@
 	$sql="UPDATE `product_details` SET `available`= '$total'  WHERE pro_id='$pid'";
 	$conn->query($sql);
 	}
-	
-	
+
+
 ?>
-	
