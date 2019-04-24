@@ -4,7 +4,7 @@
 function connect($setup = FALSE){
 	$servername = "localhost";
 	$username = "root";
-	$password = "10126168";
+	$password = "";
 	$database = "brick_builders";
 
 	// Create connection
